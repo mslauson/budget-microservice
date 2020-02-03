@@ -13,14 +13,17 @@ import java.util.List;
 @ToString
 public class BudgetResponseModel {
 
+    private BudgetResponseStatusModel responseStatus;
     private List<BudgetEntity> budgets;
 
-    public BudgetResponseModel(BudgetEntity budgetEntity) {
-        this.budgets = Collections.singletonList(budgetEntity);
+    public BudgetResponseModel(BudgetEntity budget) {
+        this.responseStatus = new BudgetResponseStatusModel(budget);
+        this.budgets = Collections.singletonList(budget);
     }
 
-    public BudgetResponseModel(List<BudgetEntity> budgetEntities) {
-        this.budgets = budgetEntities;
+    public BudgetResponseModel(List<BudgetEntity> budgets) {
+        this.responseStatus = new BudgetResponseStatusModel(budgets);
+        this.budgets = budgets;
     }
 
 }

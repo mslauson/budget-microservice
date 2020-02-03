@@ -37,10 +37,10 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getBudgetById(String id) {
         log.info("getBudgetById: id=[{}]", id);
-        BudgetEntity budgetEntity = budgetRepo
+        BudgetEntity budget = budgetRepo
                 .findById(id)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + id + "] not found"));
-        return new BudgetResponseModel(budgetEntity);
+        return new BudgetResponseModel(budget);
     }
 
     @Override

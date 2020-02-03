@@ -2,8 +2,8 @@ package io.blossom.microservices.budget.controller;
 
 import io.blossom.microservices.budget.domain.models.BudgetRequestModel;
 import io.blossom.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossom.microservices.budget.domain.models.BudgetResponseStatusModel;
 import io.blossom.microservices.budget.service.IBudgetService;
-import io.blossom.util.budgetcommonutil.constants.GlobalConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +13,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -74,16 +72,9 @@ public class BudgetController {
     }
 
     @DeleteMapping("/budget/{id}")
-    public ResponseEntity<Map<String, String>> deleteBudgetByIdV1(@PathVariable String id) {
+    public ResponseEntity<BudgetResponseStatusModel> deleteBudgetByIdV1(@PathVariable String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);
-        boolean deleted = budgetService.deleteBudgetById(id);
-        Map<String, String> response = new HashMap<>();
-        if (deleted) {
-            response.put("status", GlobalConstants.SUCCESS_MSG.getConstant());
-        } else {
-            response.put("status", "Failed");
-        }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new BudgetResponseStatusModel());
     }
 
 }
