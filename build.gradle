@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 group = 'io.blossom.microservices'
@@ -51,10 +52,17 @@ dependencies {
 			'org.projectlombok:lombok'
 	)
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test',) {
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+	testImplementation(
+			'org.spockframework:spock-core:1.2-groovy-2.4',
+			'org.spockframework:spock-spring:1.2-groovy-2.4',
+			'de.flapdoodle.embed:de.flapdoodle.embed.mongo',
+			'junit:junit:4.12'
+	)
+
 }
 
 dependencyManagement {
