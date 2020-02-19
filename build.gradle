@@ -24,8 +24,8 @@ repositories {
 	maven {
 		url "s3://artifactory-budgeteers"
 		credentials(AwsCredentials) {
-			accessKey System.getenv("AWS_KEY_SERVICE")
-			secretKey System.getenv("AWS_SECRET_SERVICE")
+			accessKey project.accessKey
+			secretKey project.secretKey
 		}
 	}
 }
