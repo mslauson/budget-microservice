@@ -1,0 +1,12 @@
+---
+applications:
+  - name: budget-microservice
+    buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+    instances: 1
+    memory: 1024M
+    disk_quota: 1024M
+    path: build/libs/expenses-microservice-0.0.1.jar
+    host: budget-microservice-dev
+    domain: cfapps.io
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ }}'
