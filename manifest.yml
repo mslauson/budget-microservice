@@ -7,6 +7,6 @@ applications:
     disk_quota: 1024M
     path: build/libs/budget-0.0.1.jar
     host: budget-microservice-dev
-    domain: cfapps.io
+    domain: blossombudgeting.io
     env:
       JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ }}'
