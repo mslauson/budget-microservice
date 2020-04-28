@@ -12,10 +12,9 @@ import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseMod
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -26,7 +25,7 @@ public class BudgetAdminController {
     private final IBudgetAdminService adminService;
 
    @PutMapping("/master")
-   public GenericSuccessResponseModel addMasterBudgetsV1(GenericCategoryModel requestModel){
+   public GenericSuccessResponseModel addMasterBudgetsV1(@Valid @RequestBody GenericCategoryModel requestModel){
         log.info("Inside BudgetAdminController.addMasterBudgetsV1 request -> [{}]", requestModel.toString());
         return adminService.updateMasterRecords(requestModel);
     }
