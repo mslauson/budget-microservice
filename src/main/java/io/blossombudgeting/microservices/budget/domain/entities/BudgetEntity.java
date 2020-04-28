@@ -1,4 +1,9 @@
-package io.blossom.microservices.budget.domain.entities;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
+package io.blossombudgeting.microservices.budget.domain.entities;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

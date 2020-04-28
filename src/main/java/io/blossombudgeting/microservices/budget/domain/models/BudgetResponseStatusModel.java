@@ -1,8 +1,14 @@
-package io.blossom.microservices.budget.domain.models;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
+package io.blossombudgeting.microservices.budget.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.blossom.microservices.budget.domain.entities.BudgetEntity;
-import io.blossom.util.budgetcommonutil.model.GenericExceptionResponse;
+import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
+
+import io.blossombudgeting.util.budgetcommonutil.model.GenericExceptionResponse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

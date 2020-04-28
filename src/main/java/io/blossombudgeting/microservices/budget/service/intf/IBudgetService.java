@@ -1,7 +1,12 @@
-package io.blossom.microservices.budget.service;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
 
-import io.blossom.microservices.budget.domain.models.BudgetRequestModel;
-import io.blossom.microservices.budget.domain.models.BudgetResponseModel;
+package io.blossombudgeting.microservices.budget.service.intf;
+
+import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 
 public interface IBudgetService {
 

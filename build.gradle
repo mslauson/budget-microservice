@@ -19,24 +19,24 @@ configurations {
 	}
 }
 
+
 repositories {
 	mavenCentral()
 	maven {
-		url "s3://artifactory-budgeteers"
-		credentials(AwsCredentials) {
-			accessKey project.accessKey
-			secretKey project.secretKey
+		url "https://maven.pkg.github.com/mslauson/budget-common-util"
+		credentials {
+			username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+			password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
 		}
 	}
 }
-
 ext {
 	set('springCloudVersion', "Hoxton.SR1")
 }
 
 dependencies {
 	implementation(
-			'io.blossom.util:budget-common-util:0.0.0.1.8',
+			'io.blossombudgeting.util:budget-common-util:0.0.2.16',
 			'org.springdoc:springdoc-openapi-ui:1.1.30',
 			'org.springframework.boot:spring-boot-starter-security',
 			'org.springframework.boot:spring-boot-starter-data-mongodb',

@@ -1,12 +1,17 @@
-package io.blossom.microservices.budget.service.impl;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
 
-import io.blossom.microservices.budget.domain.entities.BudgetEntity;
-import io.blossom.microservices.budget.domain.models.BudgetRequestModel;
-import io.blossom.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossom.microservices.budget.error.BudgetNotFoundException;
-import io.blossom.microservices.budget.repository.BudgetRepository;
-import io.blossom.microservices.budget.service.IBudgetService;
-import io.blossom.microservices.budget.util.BudgetEntityBuilder;
+package io.blossombudgeting.microservices.budget.service.impl;
+
+import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
+import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
+import io.blossombudgeting.microservices.budget.util.BudgetEntityBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

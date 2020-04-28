@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2020. blossom.io.
- * All rights reserved.
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
  */
 
-package io.blossom.microservices.budget.repository;
+package io.blossombudgeting.microservices.budget.repository;
 
-import io.blossom.microservices.budget.domain.entities.BudgetEntity;
+import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 

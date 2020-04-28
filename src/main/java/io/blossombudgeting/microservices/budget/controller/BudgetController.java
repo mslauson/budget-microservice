@@ -1,9 +1,14 @@
-package io.blossom.microservices.budget.controller;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
 
-import io.blossom.microservices.budget.domain.models.BudgetRequestModel;
-import io.blossom.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossom.microservices.budget.domain.models.BudgetResponseStatusModel;
-import io.blossom.microservices.budget.service.IBudgetService;
+package io.blossombudgeting.microservices.budget.controller;
+
+import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseStatusModel;
+import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

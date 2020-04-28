@@ -1,4 +1,9 @@
-package io.blossom.microservices.budget.domain.models;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
+package io.blossombudgeting.microservices.budget.domain.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

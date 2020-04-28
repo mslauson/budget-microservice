@@ -1,7 +1,12 @@
-package io.blossom.microservices.budget.util;
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
 
-import io.blossom.microservices.budget.domain.entities.BudgetEntity;
-import io.blossom.microservices.budget.domain.models.BudgetRequestModel;
+package io.blossombudgeting.microservices.budget.util;
+
+import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2020. blossom.io.
- * All rights reserved.
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
  */
 
-package io.blossom.microservices.budget.security;
+package io.blossombudgeting.microservices.budget.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
