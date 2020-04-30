@@ -24,15 +24,15 @@ public class BudgetAdminController {
 
     private final IBudgetAdminService adminService;
 
-   @PutMapping("/master")
-   public GenericSuccessResponseModel addMasterBudgetsV1(@Valid @RequestBody GenericCategoryModel requestModel){
+    @PostMapping("/master")
+    public GenericSuccessResponseModel addMasterBudgetsV1(@Valid @RequestBody GenericCategoryModel requestModel) {
         log.info("Inside BudgetAdminController.addMasterBudgetsV1 request -> [{}]", requestModel.toString());
         return adminService.updateMasterRecords(requestModel);
     }
 
-    @PutMapping("/master/{id}")
-   public GenericCategoryModel getMasterBudgetsV1(@PathVariable String id){
-        log.info("Inside BudgetAdminController.getMasterBudgetsV1 request -> [{}]",id);
+    @GetMapping("/master/{id}")
+    public GenericCategoryModel getMasterBudgetsV1(@PathVariable String id) {
+        log.info("Inside BudgetAdminController.getMasterBudgetsV1 request -> [{}]", id);
         return adminService.getMasterRecords(id);
     }
 
