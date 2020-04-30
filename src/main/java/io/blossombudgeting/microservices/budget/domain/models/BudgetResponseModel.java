@@ -5,7 +5,6 @@
 
 package io.blossombudgeting.microservices.budget.domain.models;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import lombok.*;
 
 import java.util.List;
@@ -18,6 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class BudgetResponseModel {
 
-    private List<BudgetEntity> budgets;
+    private List<BudgetBase> budgets;
 
 }

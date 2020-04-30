@@ -12,54 +12,65 @@ import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
+import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
-    private final BudgetMapper entityBuilder;
-
-    @Autowired
-    public BudgetServiceImpl(BudgetRepository budgetRepo, BudgetMapper entityBuilder) {
-        this.budgetRepo = budgetRepo;
-        this.entityBuilder = entityBuilder;
-    }
+    private final BudgetMapper budgetMapper;
 
     @Override
     public BudgetResponseModel saveBudget(BudgetBase request) {
         log.info("saveBudget: request=[{}]", request);
-        BudgetEntity budgetEntity = entityBuilder.covertToEntity(request);
-        return new BudgetResponseModel(budgetRepo.save(budgetEntity));
+        BudgetEntity budgetEntity = budgetMapper.covertToEntity(request);
+        BudgetBase budgetBase = budgetMapper.convertToBudgetBase(budgetRepo.save(budgetEntity));
+        return new BudgetResponseModel(Collections.singletonList(budgetBase));
     }
 
     @Override
     public BudgetResponseModel getBudgetById(String id) {
         log.info("getBudgetById: id=[{}]", id);
-        BudgetEntity budget = budgetRepo
+        BudgetEntity budgetEntity = budgetRepo
                 .findById(id)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + id + "] not found"));
-        return new BudgetResponseModel(budget);
+        BudgetBase budget = budgetMapper.convertToBudgetBase(budgetEntity);
+        return new BudgetResponseModel(Collections.singletonList(budget));
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByUsername(String username) {
-        log.info("getAllBudgetsByUsername: username=[{}]", username);
-        return new BudgetResponseModel(budgetRepo.findAllByEmail(username));
+    public BudgetResponseModel getAllBudgetsByUsername(String email) {
+        log.info("getAllBudgetsByUsername: email=[{}]", email);
+        List<BudgetBase> budgetBases = budgetRepo.findAllByEmail(email)
+                .stream()
+                .map(budgetMapper::convertToBudgetBase)
+                .collect(Collectors.toList());
+        if (budgetBases.isEmpty()){
+            throw new BudgetNotFoundException("No budgets were found for this user -> { "+email+" }");
+        }
+        return new BudgetResponseModel(budgetBases);
     }
 
     @Override
     public BudgetResponseModel getAllBudgetsByYearAndMonth(LocalDate monthYear) {
         log.info("getAllBudgetsByYearAndMonth");
-        List<BudgetEntity> budgets = budgetRepo.findAllByMonthYear(monthYear);
+        List<BudgetBase> budgets = budgetRepo.findAllByMonthYear(monthYear)
+                .stream()
+                .map(budgetMapper::convertToBudgetBase)
+                .collect(Collectors.toList());
         if (budgets.isEmpty()){
-            throw new BudgetNotFoundException("No budgets were found for this month -> {"+monthYear+"}");
+            throw new BudgetNotFoundException("No budgets were found for this month -> { "+monthYear+" }");
         }
         return new BudgetResponseModel(budgets);
     }
@@ -67,20 +78,34 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByCategory(String category) {
         log.info("getAllBudgetsByCategory: category=[{}]", category);
-        return new BudgetResponseModel(budgetRepo.findAllByCategory(category));
+        List<BudgetBase> budgets = budgetRepo.findAllByCategory(category)
+                .stream()
+                .map(budgetMapper::convertToBudgetBase)
+                .collect(Collectors.toList());
+        if (budgets.isEmpty()){
+            throw new BudgetNotFoundException("No budgets were found for this category -> { "+category+" }");
+        }
+        return new BudgetResponseModel(budgets);
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByType(String type) {
+    public BudgetResponseModel getAllBudgetsBySubCategory(String type) {
         log.info("getAllBudgetsByType: type=[{}]", type);
-        return new BudgetResponseModel(budgetRepo.findAllBySubCategory(type));
+        List<BudgetBase> budgets = budgetRepo.findAllBySubCategory(type)
+                .stream()
+                .map(budgetMapper::convertToBudgetBase)
+                .collect(Collectors.toList());
+        if (budgets.isEmpty()){
+            throw new BudgetNotFoundException("No budgets were found for this category -> { "+type+" }");
+        }
+        return new BudgetResponseModel(budgets);
     }
 
     @Override
-    public boolean deleteBudgetById(String id) {
+    public GenericSuccessResponseModel deleteBudgetById(String id) {
         log.info("deleteBudget: id=[{}]", id);
         budgetRepo.deleteById(id);
-        return !budgetRepo.existsById(id);
+        return new GenericSuccessResponseModel(!budgetRepo.existsById(id));
     }
 
 }

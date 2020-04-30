@@ -63,7 +63,7 @@ public class BudgetController {
     @GetMapping("/type/{type}")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByTypeV1(@PathVariable @Size(max = 50) String type) {
         log.info("getAllBudgetsByTypeV1: type=[{}]", type);
-        return ResponseEntity.ok(budgetService.getAllBudgetsByType(type.toUpperCase()));
+        return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(type.toUpperCase()));
     }
 
     @DeleteMapping("/{id}")

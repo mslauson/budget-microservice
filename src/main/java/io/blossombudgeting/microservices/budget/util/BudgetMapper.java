@@ -28,7 +28,7 @@ public class BudgetMapper {
                 .build();
     }
 
-    public BudgetBase covertToEntity(BudgetEntity budgetEntity) {
+    public BudgetBase convertToBudgetBase(BudgetEntity budgetEntity) {
         return BudgetBase.builder()
                 .id(budgetEntity.getId())
                 .email(budgetEntity.getEmail().toUpperCase())

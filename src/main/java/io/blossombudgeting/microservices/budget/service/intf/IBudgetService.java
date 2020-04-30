@@ -7,6 +7,7 @@ package io.blossombudgeting.microservices.budget.service.intf;
 
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 
 import java.time.LocalDate;
 
@@ -22,8 +23,8 @@ public interface IBudgetService {
 
     BudgetResponseModel getAllBudgetsByCategory(String category);
 
-    BudgetResponseModel getAllBudgetsByType(String type);
+    BudgetResponseModel getAllBudgetsBySubCategory(String type);
 
-    boolean deleteBudgetById(String id);
+    GenericSuccessResponseModel deleteBudgetById(String id);
 
 }
