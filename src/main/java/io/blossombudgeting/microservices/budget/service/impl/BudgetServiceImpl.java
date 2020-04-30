@@ -6,34 +6,34 @@
 package io.blossombudgeting.microservices.budget.service.impl;
 
 import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
-import io.blossombudgeting.microservices.budget.util.BudgetEntityBuilder;
+import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
-    private final BudgetEntityBuilder entityBuilder;
+    private final BudgetMapper entityBuilder;
 
     @Autowired
-    public BudgetServiceImpl(BudgetRepository budgetRepo, BudgetEntityBuilder entityBuilder) {
+    public BudgetServiceImpl(BudgetRepository budgetRepo, BudgetMapper entityBuilder) {
         this.budgetRepo = budgetRepo;
         this.entityBuilder = entityBuilder;
     }
 
     @Override
-    public BudgetResponseModel saveBudget(BudgetRequestModel request) {
+    public BudgetResponseModel saveBudget(BudgetBase request) {
         log.info("saveBudget: request=[{}]", request);
         BudgetEntity budgetEntity = entityBuilder.covertToEntity(request);
         return new BudgetResponseModel(budgetRepo.save(budgetEntity));
@@ -51,21 +51,16 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByUsername(String username) {
         log.info("getAllBudgetsByUsername: username=[{}]", username);
-        return new BudgetResponseModel(budgetRepo.findAllByUsername(username));
+        return new BudgetResponseModel(budgetRepo.findAllByEmail(username));
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByYear(Integer year) {
-        log.info("getAllBudgetsByYear: year=[{}]", year);
-        return new BudgetResponseModel(budgetRepo.findAllByYear(year));
-    }
-
-    @Override
-    public BudgetResponseModel getAllBudgetsByYearAndMonth(Integer year, Integer month) {
-        log.info("getAllBudgetsByYearAndMonth: year=[{}] month=[{}]", year, month);
-        List<BudgetEntity> budgets = budgetRepo.findAllByYear(year).stream()
-                .filter(budget -> budget.getMonth().equals(month))
-                .collect(Collectors.toList());
+    public BudgetResponseModel getAllBudgetsByYearAndMonth(LocalDate monthYear) {
+        log.info("getAllBudgetsByYearAndMonth");
+        List<BudgetEntity> budgets = budgetRepo.findAllByMonthYear(monthYear);
+        if (budgets.isEmpty()){
+            throw new BudgetNotFoundException("No budgets were found for this month -> {"+monthYear+"}");
+        }
         return new BudgetResponseModel(budgets);
     }
 
@@ -78,7 +73,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByType(String type) {
         log.info("getAllBudgetsByType: type=[{}]", type);
-        return new BudgetResponseModel(budgetRepo.findAllByType(type));
+        return new BudgetResponseModel(budgetRepo.findAllBySubCategory(type));
     }
 
     @Override

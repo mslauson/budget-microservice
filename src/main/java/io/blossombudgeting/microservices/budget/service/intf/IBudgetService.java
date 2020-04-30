@@ -5,20 +5,20 @@
 
 package io.blossombudgeting.microservices.budget.service.intf;
 
-import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+
+import java.time.LocalDate;
 
 public interface IBudgetService {
 
-    BudgetResponseModel saveBudget(BudgetRequestModel request);
+    BudgetResponseModel saveBudget(BudgetBase request);
 
     BudgetResponseModel getBudgetById(String id);
 
     BudgetResponseModel getAllBudgetsByUsername(String username);
 
-    BudgetResponseModel getAllBudgetsByYear(Integer year);
-
-    BudgetResponseModel getAllBudgetsByYearAndMonth(Integer year, Integer month);
+    BudgetResponseModel getAllBudgetsByYearAndMonth(LocalDate monthYear);
 
     BudgetResponseModel getAllBudgetsByCategory(String category);
 

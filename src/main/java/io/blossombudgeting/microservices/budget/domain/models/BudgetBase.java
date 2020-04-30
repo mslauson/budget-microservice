@@ -3,44 +3,53 @@
  * All Rights Reserved
  */
 
-package io.blossombudgeting.microservices.budget.domain.entities;
+package io.blossombudgeting.microservices.budget.domain.models;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Document("budget")
-public class BudgetEntity {
+public class BudgetBase {
 
-    @Id
+    @NotBlank
     private String id;
 
+    @NotBlank
+    @Size(min = 4, max = 30)
     private String email;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @NotNull
     private LocalDateTime dateCreated;
 
+    @NotNull
     private LocalDate monthYear;
 
+    @NotBlank
+    @Size(max = 50)
     private String name;
 
+    @NotBlank
+    @Size(max = 50)
     private String category;
 
+    @NotBlank
+    @Size(max = 50)
     private String subCategory;
 
+    @NotNull
     private BigDecimal used;
 
+    @NotNull
     private BigDecimal allocation;
 
 }
