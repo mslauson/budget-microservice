@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,7 +41,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddMasterNoCategories() throws Exception {
         genericCategoryModel.setCategories(null);
-        mockMvc.perform(put("/api/v1/budget/admin/master")
+        mockMvc.perform(post("/api/v1/budget/admin/master")
                 .content(om.writeValueAsString(genericCategoryModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -51,7 +52,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddMasterNoCategoryId() throws Exception {
         genericCategoryModel.getCategories().get(0).setCategoryId(null);
-        mockMvc.perform(put("/api/v1/budget/admin/master")
+        mockMvc.perform(post("/api/v1/budget/admin/master")
                 .content(om.writeValueAsString(genericCategoryModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -62,7 +63,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddMasterNoCategoryHeirarchy() throws Exception {
         genericCategoryModel.getCategories().get(0).setHierarchy(null);
-        mockMvc.perform(put("/api/v1/budget/admin/master")
+        mockMvc.perform(post("/api/v1/budget/admin/master")
                 .content(om.writeValueAsString(genericCategoryModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -73,7 +74,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddMasterNoCategoryGroup() throws Exception {
         genericCategoryModel.getCategories().get(0).setGroup(null);
-        mockMvc.perform(put("/api/v1/budget/admin/master")
+        mockMvc.perform(post("/api/v1/budget/admin/master")
                 .content(om.writeValueAsString(genericCategoryModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
