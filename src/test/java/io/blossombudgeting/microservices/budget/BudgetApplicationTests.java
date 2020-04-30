@@ -21,8 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 @SpringBootTest

@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,5 +43,9 @@ public class BudgetEntity {
     private BigDecimal used;
 
     private BigDecimal allocation;
+
+    private boolean visible;
+
+    private List<String> linkedTransactions;
 
 }

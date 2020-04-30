@@ -53,4 +53,6 @@ public class BudgetBase {
     @NotNull
     private BigDecimal allocation;
 
+    private boolean visible;
+
 }

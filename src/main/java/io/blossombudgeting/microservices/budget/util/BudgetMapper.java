@@ -25,6 +25,7 @@ public class BudgetMapper {
                 .subCategory(request.getSubCategory().toUpperCase())
                 .used(request.getUsed())
                 .allocation(request.getAllocation())
+                .visible(request.isVisible())
                 .build();
     }
 
@@ -39,6 +40,7 @@ public class BudgetMapper {
                 .subCategory(budgetEntity.getSubCategory().toUpperCase())
                 .used(budgetEntity.getUsed())
                 .allocation(budgetEntity.getAllocation())
+                .visible(budgetEntity.isVisible())
                 .build();
     }
 
