@@ -6,10 +6,11 @@
 package io.blossombudgeting.microservices.budget.domain.models;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,16 +20,16 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class BudgetBase {
 
-    @NotBlank
     private String id;
 
     @NotBlank
     @Size(min = 4, max = 30)
+    @Email
     private String email;
 
-    @NotNull
     private LocalDateTime dateCreated;
 
     @NotNull

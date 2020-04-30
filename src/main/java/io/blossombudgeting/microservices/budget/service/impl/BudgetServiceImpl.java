@@ -12,6 +12,7 @@ import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
+import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel saveBudget(BudgetBase request) {
         log.info("saveBudget: request=[{}]", request);
+        checkIfDuplicateBudget(request.getCategory(), request.getSubCategory());
         BudgetEntity budgetEntity = budgetMapper.covertToEntity(request);
         BudgetBase budgetBase = budgetMapper.convertToBudgetBase(budgetRepo.save(budgetEntity));
         return new BudgetResponseModel(Collections.singletonList(budgetBase));
@@ -50,14 +52,14 @@ public class BudgetServiceImpl implements IBudgetService {
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByUsername(String email) {
+    public BudgetResponseModel getAllBudgetsByEmail(String email) {
         log.info("getAllBudgetsByUsername: email=[{}]", email);
         List<BudgetBase> budgetBases = budgetRepo.findAllByEmail(email)
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgetBases.isEmpty()){
-            throw new BudgetNotFoundException("No budgets were found for this user -> { "+email+" }");
+        if (budgetBases.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this user -> { " + email + " }");
         }
         return new BudgetResponseModel(budgetBases);
     }
@@ -69,8 +71,8 @@ public class BudgetServiceImpl implements IBudgetService {
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgets.isEmpty()){
-            throw new BudgetNotFoundException("No budgets were found for this month -> { "+monthYear+" }");
+        if (budgets.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this month -> { " + monthYear + " }");
         }
         return new BudgetResponseModel(budgets);
     }
@@ -82,8 +84,8 @@ public class BudgetServiceImpl implements IBudgetService {
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgets.isEmpty()){
-            throw new BudgetNotFoundException("No budgets were found for this category -> { "+category+" }");
+        if (budgets.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this category -> { " + category + " }");
         }
         return new BudgetResponseModel(budgets);
     }
@@ -95,8 +97,8 @@ public class BudgetServiceImpl implements IBudgetService {
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgets.isEmpty()){
-            throw new BudgetNotFoundException("No budgets were found for this category -> { "+type+" }");
+        if (budgets.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this category -> { " + type + " }");
         }
         return new BudgetResponseModel(budgets);
     }
@@ -104,8 +106,31 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public GenericSuccessResponseModel deleteBudgetById(String id) {
         log.info("deleteBudget: id=[{}]", id);
+        if (!budgetRepo.existsById(id)){
+            throw new BudgetNotFoundException(
+                    "No budget found with given Id"
+            );
+        }
         budgetRepo.deleteById(id);
         return new GenericSuccessResponseModel(!budgetRepo.existsById(id));
+    }
+
+    /**
+     * Checks to see if budget is duplicate
+     * @param category category of budget
+     * @param subCategory sub category of budget
+     */
+    private void checkIfDuplicateBudget(String category, String subCategory) {
+        Long categoryCount = budgetRepo.countAllByCategoryAndSubCategory(
+                category.toUpperCase(),
+                subCategory.toUpperCase()
+        );
+
+        if (categoryCount != 0){
+            throw new GenericBadRequestException(
+                    "A budget in this category/subCategory already exists"
+            );
+        }
     }
 
 }

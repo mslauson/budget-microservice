@@ -7,6 +7,7 @@ package io.blossombudgeting.microservices.budget.util;
 
 import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
+import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -16,9 +17,8 @@ public class BudgetMapper {
 
     public BudgetEntity covertToEntity(BudgetBase request) {
         return BudgetEntity.builder()
-                .id(request.getId())
                 .email(request.getEmail().toUpperCase())
-                .dateCreated(request.getDateCreated() != null ? request.getDateCreated() : LocalDateTime.now())
+                .dateCreated(request.getDateCreated() != null ? request.getDateCreated() : DateUtils.utcTimeStamp())
                 .monthYear(request.getMonthYear())
                 .name(request.getName().toUpperCase())
                 .category(request.getCategory().toUpperCase())

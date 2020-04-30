@@ -12,11 +12,11 @@ import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseMod
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -40,14 +40,15 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getBudgetById(id));
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByUsernameV1(@PathVariable @Size(min = 4, max = 30) String username) {
-        log.info("getAllBudgetsByUsernameV1: username=[{}]", username);
-        return ResponseEntity.ok(budgetService.getAllBudgetsByUsername(username.toUpperCase()));
+    @GetMapping("/email/{email}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByEmailV1(@PathVariable @Size(min = 4, max = 30) String email) {
+        log.info("getAllBudgetsByEmailV1: email=[{}]", email);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByEmail(email.toUpperCase()));
     }
 
     @GetMapping("/month/{monthYear}")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
             @PathVariable LocalDate monthYear) {
 
         log.info("getAllBudgetsByYearAndMonthV1: monthYear=[{}]", monthYear);
@@ -60,10 +61,10 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getAllBudgetsByCategory(category.toUpperCase()));
     }
 
-    @GetMapping("/type/{type}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByTypeV1(@PathVariable @Size(max = 50) String type) {
-        log.info("getAllBudgetsByTypeV1: type=[{}]", type);
-        return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(type.toUpperCase()));
+    @GetMapping("/subCategory/{subCategory}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable @Size(max = 50) String subCategory) {
+        log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
+        return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
     }
 
     @DeleteMapping("/{id}")

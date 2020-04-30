@@ -23,4 +23,6 @@ public interface BudgetRepository extends MongoRepository<BudgetEntity, String> 
 
     List<BudgetEntity> findAllBySubCategory(String type);
 
+    Long countAllByCategoryAndSubCategory(String category, String subCategory);
+
 }
