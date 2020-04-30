@@ -5,15 +5,13 @@
 
 package io.blossombudgeting.microservices.budget.controller;
 
-import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseStatusModel;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
+import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,9 +67,9 @@ public class BudgetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BudgetResponseStatusModel> deleteBudgetByIdV1(@PathVariable String id) {
+    public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@PathVariable String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);
-        return ResponseEntity.ok(new BudgetResponseStatusModel());
+        return ResponseEntity.ok(budgetService.deleteBudgetById(id));
     }
 
 }
