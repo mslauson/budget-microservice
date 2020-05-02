@@ -29,7 +29,8 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collections;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -42,14 +43,14 @@ public class BudgetApplicationTests {
 
     @Autowired
     MockMvc mockMvc;
-    private ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
     private GenericCategoryModel genericCategoryModel;
     private BudgetBase budgetBase;
 
     @BeforeEach
-    void setUp(){
-        genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string",Collections.singletonList("String"),  "String")));
-        budgetBase =new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), LocalDate.of(2020, Month.APRIL, 1), "name", "category", "subCategory", new BigDecimal(0), new BigDecimal(0), false);
+    void setUp() {
+        genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string", Collections.singletonList("String"), "String")));
+        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), LocalDate.of(2020, Month.APRIL, 1), "name", "category", "subCategory", new BigDecimal(0), new BigDecimal(0), false, Collections.singletonList(""));
     }
 
     @Test
@@ -58,6 +59,7 @@ public class BudgetApplicationTests {
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andReturn();
         String string = result.getResponse().getContentAsString();
         BudgetResponseModel rm = om.readValue(string, BudgetResponseModel.class);
@@ -236,10 +238,13 @@ public class BudgetApplicationTests {
 
     @Test
     void DTestGetBudgetByEmail() throws Exception {
-        mockMvc.perform(get("/api/v1/budget/email/email@email.com")
+        MvcResult result = mockMvc.perform(get("/api/v1/budget/email/email@email.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        String body = result.getResponse().getContentAsString();
+        System.out.println(body);
     }
 
     @Test
@@ -253,7 +258,7 @@ public class BudgetApplicationTests {
 
     @Test
     void ETestGetBudgetByMonthYear() throws Exception {
-        mockMvc.perform(get("/api/v1/budget/month/2020-04-01")
+        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2020-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -261,11 +266,30 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/budget/month/2000-04-01")
+        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this month -> { 2000-04-01 }"));
+    }
+
+    @Test
+    void testGetBudgetByDateBadEmail() throws Exception {
+        mockMvc.perform(get("/api/v1/budget/emailemail.com/month/2000-04-01")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
+    }
+
+
+    @Test
+    void testGetBudgetByDateBadDate() throws Exception {
+        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2000-0dfsf4-01")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for monthYear is not in the correct format"));
     }
 
     @Test
@@ -302,22 +326,22 @@ public class BudgetApplicationTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this category -> { ASDKLFJ }"));
     }
 
-    @Test
-    void HTestDeleteBudgetById() throws Exception {
-        mockMvc.perform(delete("/api/v1/budget/" + getBudgetId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    void HTestDeleteBudgetById() throws Exception {
+//        mockMvc.perform(delete("/api/v1/budget/" + getBudgetId())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    void testDeleteBudgetById() throws Exception {
-        mockMvc.perform(delete("/api/v1/budget/" + getBudgetId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
-    }
+//    @Test
+//    void testDeleteBudgetById() throws Exception {
+//        mockMvc.perform(delete("/api/v1/budget/" + getBudgetId())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
+//    }
 
     @Test
     void testAddMasterNoCategories() throws Exception {

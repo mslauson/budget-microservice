@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
 plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -36,7 +41,7 @@ ext {
 
 dependencies {
 	implementation(
-			'io.blossombudgeting.util:budget-common-util:0.0.2.17',
+			'io.blossombudgeting.util:budget-common-util:0.0.2.19',
 			'org.springdoc:springdoc-openapi-ui:1.1.30',
 			'org.springframework.boot:spring-boot-starter-security',
 			'org.springframework.boot:spring-boot-starter-data-mongodb',

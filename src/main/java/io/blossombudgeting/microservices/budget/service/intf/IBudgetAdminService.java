@@ -10,5 +10,8 @@ import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseMod
 
 public interface IBudgetAdminService {
     GenericSuccessResponseModel updateMasterRecords(GenericCategoryModel request);
+
     GenericCategoryModel getMasterRecords(String id);
+
+    GenericSuccessResponseModel createGenericBudgetsForTheMonth(String email);
 }

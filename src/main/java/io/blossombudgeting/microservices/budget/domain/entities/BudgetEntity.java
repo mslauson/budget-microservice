@@ -19,6 +19,7 @@ import java.util.List;
 @Setter
 @ToString
 @Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("budget")
@@ -35,6 +36,8 @@ public class BudgetEntity {
     private LocalDate monthYear;
 
     private String name;
+
+    private String categoryId;
 
     private String category;
 

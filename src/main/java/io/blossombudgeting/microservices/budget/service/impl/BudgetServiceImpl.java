@@ -8,6 +8,7 @@ package io.blossombudgeting.microservices.budget.service.impl;
 import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,14 +65,15 @@ public class BudgetServiceImpl implements IBudgetService {
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByYearAndMonth(LocalDate monthYear) {
+    public BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel) {
         log.info("getAllBudgetsByYearAndMonth");
-        List<BudgetBase> budgets = budgetRepo.findAllByMonthYear(monthYear)
+        List<BudgetBase> budgets = budgetRepo.findAllByEmailAndMonthYear(requestModel.getEmail().toUpperCase()
+                , requestModel.getMonthYear())
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
         if (budgets.isEmpty()) {
-            throw new BudgetNotFoundException("No budgets were found for this month -> { " + monthYear + " }");
+            throw new BudgetNotFoundException("No budgets were found for this month -> { " + requestModel.getMonthYear() + " }");
         }
         return new BudgetResponseModel(budgets);
     }

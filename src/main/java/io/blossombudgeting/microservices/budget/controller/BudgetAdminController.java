@@ -12,6 +12,7 @@ import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseMod
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,15 +26,21 @@ public class BudgetAdminController {
     private final IBudgetAdminService adminService;
 
     @PostMapping("/master")
-    public GenericSuccessResponseModel addMasterBudgetsV1(@Valid @RequestBody GenericCategoryModel requestModel) {
+    public ResponseEntity<GenericSuccessResponseModel> addMasterBudgetsV1(@Valid @RequestBody GenericCategoryModel requestModel) {
         log.info("Inside BudgetAdminController.addMasterBudgetsV1 request -> [{}]", requestModel.toString());
-        return adminService.updateMasterRecords(requestModel);
+        return ResponseEntity.ok(adminService.updateMasterRecords(requestModel));
     }
 
     @GetMapping("/master/{id}")
-    public GenericCategoryModel getMasterBudgetsV1(@PathVariable String id) {
+    public ResponseEntity<GenericCategoryModel> getMasterBudgetsV1(@PathVariable String id) {
         log.info("Inside BudgetAdminController.getMasterBudgetsV1 request -> [{}]", id);
-        return adminService.getMasterRecords(id);
+        return ResponseEntity.ok(adminService.getMasterRecords(id));
+    }
+
+    @PutMapping("/generate/{email}")
+    public ResponseEntity<GenericSuccessResponseModel> generateGenericBudgetsV1(@PathVariable String email) {
+        log.info("Inside BudgetAdminController.generateGenericBudgetsV1 request -> [{}]", email);
+        return ResponseEntity.ok(adminService.createGenericBudgetsForTheMonth(email));
     }
 
 }

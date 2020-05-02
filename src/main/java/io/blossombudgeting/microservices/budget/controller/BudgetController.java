@@ -7,22 +7,21 @@ package io.blossombudgeting.microservices.budget.controller;
 
 import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1//budget")
+@RequestMapping("/api/v1/budget")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BudgetController {
 
@@ -46,13 +45,11 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getAllBudgetsByEmail(email.toUpperCase()));
     }
 
-    @GetMapping("/month/{monthYear}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(
-            @DateTimeFormat(pattern = "yyyy-MM-dd")
-            @PathVariable LocalDate monthYear) {
+    @GetMapping("/{email}/month/{monthYear}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@Valid GetBudgetsByMonthRequestModel requestModel) {
 
-        log.info("getAllBudgetsByYearAndMonthV1: monthYear=[{}]", monthYear);
-        return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(monthYear));
+        log.info("getAllBudgetsByYearAndMonthV1: request=[{}]", requestModel);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));
     }
 
     @GetMapping("/category/{category}")

@@ -17,7 +17,7 @@ public interface BudgetRepository extends MongoRepository<BudgetEntity, String> 
 
     List<BudgetEntity> findAllByEmail(String email);
 
-    List<BudgetEntity> findAllByMonthYear(LocalDate monthYear);
+    List<BudgetEntity> findAllByEmailAndMonthYear(String email, LocalDate monthYear);
 
     List<BudgetEntity> findAllByCategory(String category);
 

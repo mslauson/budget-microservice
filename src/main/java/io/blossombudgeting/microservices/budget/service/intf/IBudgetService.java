@@ -7,9 +7,8 @@ package io.blossombudgeting.microservices.budget.service.intf;
 
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
-
-import java.time.LocalDate;
 
 public interface IBudgetService {
 
@@ -19,7 +18,7 @@ public interface IBudgetService {
 
     BudgetResponseModel getAllBudgetsByEmail(String username);
 
-    BudgetResponseModel getAllBudgetsByYearAndMonth(LocalDate monthYear);
+    BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel);
 
     BudgetResponseModel getAllBudgetsByCategory(String category);
 

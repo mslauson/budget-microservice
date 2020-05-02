@@ -11,6 +11,7 @@ import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Component
 public class BudgetMapper {
@@ -26,6 +27,7 @@ public class BudgetMapper {
                 .used(request.getUsed())
                 .allocation(request.getAllocation())
                 .visible(request.isVisible())
+                .linkedTransactions(new ArrayList<>())
                 .build();
     }
 
@@ -41,6 +43,7 @@ public class BudgetMapper {
                 .used(budgetEntity.getUsed())
                 .allocation(budgetEntity.getAllocation())
                 .visible(budgetEntity.isVisible())
+                .linkedTransactions(budgetEntity.getLinkedTransactions())
                 .build();
     }
 

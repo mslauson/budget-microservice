@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -64,5 +65,7 @@ public class BudgetBase {
     private BigDecimal allocation;
 
     private boolean visible;
+
+    private List<String> linkedTransactions;
 
 }
