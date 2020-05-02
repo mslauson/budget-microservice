@@ -11,13 +11,14 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.blossombudgeting.microservices.budget.domain.entities.LinkedTransactions;
+import io.blossombudgeting.microservices.budget.domain.entities.SubCategory;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,18 +55,16 @@ public class BudgetBase {
     @Size(max = 50)
     private String category;
 
-    @NotBlank
-    @Size(max = 50)
-    private String subCategory;
+    private SubCategory subCategory;
 
     @NotNull
-    private BigDecimal used;
+    private Double used;
 
     @NotNull
-    private BigDecimal allocation;
+    private Double allocation;
 
     private boolean visible;
 
-    private List<String> linkedTransactions;
+    private List<LinkedTransactions> linkedTransactions;
 
 }

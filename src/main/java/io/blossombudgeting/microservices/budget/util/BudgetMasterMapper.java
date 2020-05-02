@@ -11,7 +11,6 @@ import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,12 +42,11 @@ public class BudgetMasterMapper {
                                 .builder()
                                 .email(email)
                                 .monthYear(DateUtils.getFirstOfMonth())
-                                .name(category.getHierarchy().get(0))
-                                .categoryId(category.getCategoryId())
+                                .name(category.getHierarchy().get(0).equals("Shops") ? "Shopping" : category.getHierarchy().get(0))
                                 .category(category.getGroup())
-                                .subCategory(category.getHierarchy().get(0))
-                                .used(BigDecimal.valueOf(0))
-                                .allocation(BigDecimal.valueOf(0))
+//                                .subCategory(category.getHierarchy().get(category.getHierarchy().size() - 1))
+                                .used(0D)
+                                .allocation(0D)
                                 .visible(false)
                                 .linkedTransactions(new ArrayList<>())
 

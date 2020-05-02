@@ -15,6 +15,7 @@ import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
+import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel saveBudget(BudgetBase request) {
         log.info("saveBudget: request=[{}]", request);
-        checkIfDuplicateBudget(request.getCategory(), request.getSubCategory());
+        checkIfDuplicateBudget(request.getName());
         BudgetEntity budgetEntity = budgetMapper.covertToEntity(request);
         BudgetBase budgetBase = budgetMapper.convertToBudgetBase(budgetRepo.save(budgetEntity));
         return new BudgetResponseModel(Collections.singletonList(budgetBase));
@@ -94,14 +95,16 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsBySubCategory(String type) {
         log.info("getAllBudgetsByType: type=[{}]", type);
-        List<BudgetBase> budgets = budgetRepo.findAllBySubCategory(type)
-                .stream()
-                .map(budgetMapper::convertToBudgetBase)
-                .collect(Collectors.toList());
-        if (budgets.isEmpty()) {
-            throw new BudgetNotFoundException("No budgets were found for this category -> { " + type + " }");
-        }
-        return new BudgetResponseModel(budgets);
+//        List<BudgetBase> budgets = budgetRepo.findAllBySubCategory(type)
+//                .stream()
+//                .map(budgetMapper::convertToBudgetBase)
+//                .collect(Collectors.toList());
+//        if (budgets.isEmpty()) {
+//            throw new BudgetNotFoundException("No budgets were found for this category -> { " + type + " }");
+//        }
+//        return new BudgetResponseModel(budgets);
+
+        return null;
     }
 
     @Override
@@ -118,16 +121,16 @@ public class BudgetServiceImpl implements IBudgetService {
 
     /**
      * Checks to see if budget is duplicate
-     * @param category category of budget
-     * @param subCategory sub category of budget
+     *
+     * @param name category of budget
      */
-    private void checkIfDuplicateBudget(String category, String subCategory) {
-        Long categoryCount = budgetRepo.countAllByCategoryAndSubCategory(
-                category.toUpperCase(),
-                subCategory.toUpperCase()
+    private void checkIfDuplicateBudget(String name) {
+        Long categoryCount = budgetRepo.countAllByNameAndMonthYear(
+                name,
+                DateUtils.getFirstOfMonth()
         );
 
-        if (categoryCount != 0){
+        if (categoryCount != 0) {
             throw new GenericBadRequestException(
                     "A budget in this category/subCategory already exists"
             );

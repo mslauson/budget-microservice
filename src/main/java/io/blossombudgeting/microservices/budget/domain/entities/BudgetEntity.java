@@ -10,7 +10,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,18 +36,16 @@ public class BudgetEntity {
 
     private String name;
 
-    private String categoryId;
-
     private String category;
 
-    private String subCategory;
+    private SubCategory subCategory;
 
-    private BigDecimal used;
+    private Double used;
 
-    private BigDecimal allocation;
+    private Double allocation;
 
     private boolean visible;
 
-    private List<String> linkedTransactions;
+    private List<LinkedTransactions> linkedTransactions;
 
 }

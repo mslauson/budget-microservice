@@ -11,7 +11,6 @@ import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Component
 public class BudgetMapper {
@@ -21,13 +20,13 @@ public class BudgetMapper {
                 .email(request.getEmail().toUpperCase())
                 .dateCreated(request.getDateCreated() != null ? request.getDateCreated() : DateUtils.utcTimeStamp())
                 .monthYear(request.getMonthYear())
-                .name(request.getName().toUpperCase())
-                .category(request.getCategory().toUpperCase())
-                .subCategory(request.getSubCategory().toUpperCase())
+                .name(request.getName())
+                .category(request.getCategory())
+                .subCategory(request.getSubCategory())
                 .used(request.getUsed())
                 .allocation(request.getAllocation())
                 .visible(request.isVisible())
-                .linkedTransactions(new ArrayList<>())
+                .linkedTransactions(request.getLinkedTransactions())
                 .build();
     }
 
@@ -37,9 +36,9 @@ public class BudgetMapper {
                 .email(budgetEntity.getEmail().toUpperCase())
                 .dateCreated(budgetEntity.getDateCreated() != null ? budgetEntity.getDateCreated() : LocalDateTime.now())
                 .monthYear(budgetEntity.getMonthYear())
-                .name(budgetEntity.getName().toUpperCase())
-                .category(budgetEntity.getCategory().toUpperCase())
-                .subCategory(budgetEntity.getSubCategory().toUpperCase())
+                .name(budgetEntity.getName())
+                .category(budgetEntity.getCategory())
+                .subCategory(budgetEntity.getSubCategory())
                 .used(budgetEntity.getUsed())
                 .allocation(budgetEntity.getAllocation())
                 .visible(budgetEntity.isVisible())
