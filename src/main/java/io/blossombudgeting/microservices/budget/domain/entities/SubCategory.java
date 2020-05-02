@@ -21,7 +21,7 @@ public class SubCategory {
 
     private String category;
 
-    private String subCategory;
+    private SubCategory subCategory;
 
     private Double used;
 
