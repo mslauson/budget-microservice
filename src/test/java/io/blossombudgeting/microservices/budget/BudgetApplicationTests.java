@@ -51,7 +51,7 @@ public class BudgetApplicationTests {
     @BeforeEach
     void setUp() {
         genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string", Collections.singletonList("String"), "String")));
-        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), DateUtils.getFirstOfMonth(), "name", "category", new SubCategoryDocument(), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
+        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), DateUtils.getFirstOfMonth(), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
     }
 
     @Test

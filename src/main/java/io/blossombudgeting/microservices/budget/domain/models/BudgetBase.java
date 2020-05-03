@@ -55,7 +55,7 @@ public class BudgetBase {
     @Size(max = 50)
     private String category;
 
-    private SubCategoryDocument subCategory;
+    private List<SubCategoryDocument> subCategory;
 
     @NotNull
     private Double used;

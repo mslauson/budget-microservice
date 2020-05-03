@@ -13,7 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LinkedTransactions {
-
     private String transactionId;
     private Double amount;
 }

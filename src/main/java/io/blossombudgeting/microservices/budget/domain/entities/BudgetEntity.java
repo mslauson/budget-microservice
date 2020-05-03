@@ -38,7 +38,7 @@ public class BudgetEntity {
 
     private String category;
 
-    private SubCategoryDocument subCategory;
+    private List<SubCategoryDocument> subCategory;
 
     private Double used;
 

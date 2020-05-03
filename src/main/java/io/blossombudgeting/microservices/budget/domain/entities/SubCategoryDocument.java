@@ -21,8 +21,6 @@ public class SubCategoryDocument {
 
     private String category;
 
-    private List<SubCategoryDocument> subCategory;
-
     private Double used;
 
     private Double allocation;
