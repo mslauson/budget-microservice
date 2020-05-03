@@ -14,14 +14,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubCategory {
+public class SubCategoryDocument {
     private String id;
 
     private String name;
 
     private String category;
 
-    private SubCategory subCategory;
+    private List<SubCategoryDocument> subCategory;
 
     private Double used;
 

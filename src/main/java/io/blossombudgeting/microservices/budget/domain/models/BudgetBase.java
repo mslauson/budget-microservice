@@ -12,7 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.blossombudgeting.microservices.budget.domain.entities.LinkedTransactions;
-import io.blossombudgeting.microservices.budget.domain.entities.SubCategory;
+import io.blossombudgeting.microservices.budget.domain.entities.SubCategoryDocument;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -55,7 +55,7 @@ public class BudgetBase {
     @Size(max = 50)
     private String category;
 
-    private SubCategory subCategory;
+    private SubCategoryDocument subCategory;
 
     @NotNull
     private Double used;
