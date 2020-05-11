@@ -17,7 +17,7 @@ public class BudgetMapper {
 
     public BudgetEntity covertToEntity(BudgetBase request) {
         return BudgetEntity.builder()
-                .email(request.getEmail().toUpperCase())
+                .email(request.getEmail().toLowerCase())
                 .dateCreated(request.getDateCreated() != null ? request.getDateCreated() : DateUtils.utcTimeStamp())
                 .monthYear(request.getMonthYear())
                 .name(request.getName())
@@ -33,7 +33,7 @@ public class BudgetMapper {
     public BudgetBase convertToBudgetBase(BudgetEntity budgetEntity) {
         return BudgetBase.builder()
                 .id(budgetEntity.getId())
-                .email(budgetEntity.getEmail().toUpperCase())
+                .email(budgetEntity.getEmail().toLowerCase())
                 .dateCreated(budgetEntity.getDateCreated() != null ? budgetEntity.getDateCreated() : LocalDateTime.now())
                 .monthYear(budgetEntity.getMonthYear())
                 .name(budgetEntity.getName())

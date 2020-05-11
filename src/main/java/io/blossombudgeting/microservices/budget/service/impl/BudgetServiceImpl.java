@@ -68,7 +68,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel) {
         log.info("getAllBudgetsByYearAndMonth");
-        List<BudgetBase> budgets = budgetRepo.findAllByEmailAndMonthYear(requestModel.getEmail().toUpperCase()
+        List<BudgetBase> budgets = budgetRepo.findAllByEmailAndMonthYear(requestModel.getEmail().toLowerCase()
                 , requestModel.getMonthYear())
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
