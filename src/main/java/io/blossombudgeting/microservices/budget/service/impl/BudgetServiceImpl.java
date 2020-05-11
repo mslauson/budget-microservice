@@ -55,7 +55,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByEmail(String email) {
         log.info("getAllBudgetsByUsername: email=[{}]", email);
-        List<BudgetBase> budgetBases = budgetRepo.findAllByEmail(email)
+        List<BudgetBase> budgetBases = budgetRepo.findAllByEmail(email.toLowerCase())
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
