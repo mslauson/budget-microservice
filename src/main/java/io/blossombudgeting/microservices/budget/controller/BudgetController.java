@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2020. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
+package io.blossombudgeting.microservices.budget.controller;
+
+import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
+import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
+import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/budget")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class BudgetController {
+
+    private final IBudgetService budgetService;
+
+    @PostMapping
+    public ResponseEntity<BudgetResponseModel> saveBudgetV1(@RequestBody @Valid BudgetRequestModel request) {
+        log.info("saveBudgetV1: request=[{}]", request);
+        return ResponseEntity.ok(budgetService.saveBudget(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BudgetResponseModel> getBudgetByIdV1(@PathVariable String id) {
+        log.info("getBudgetByIdV1: id=[{}]", id);
+        return ResponseEntity.ok(budgetService.getBudgetById(id));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByEmailV1(@PathVariable @Size(min = 4, max = 30) String email) {
+        log.info("getAllBudgetsByEmailV1: email=[{}]", email);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByEmail(email.toUpperCase()));
+    }
+
+    @GetMapping("/{email}/month/{monthYear}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@Valid GetBudgetsByMonthRequestModel requestModel) {
+
+        log.info("getAllBudgetsByYearAndMonthV1: request=[{}]", requestModel);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@PathVariable @Size(max = 50) String category) {
+        log.info("getAllBudgetsByCategoryV1: category=[{}]", category);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByCategory(category.toUpperCase()));
+    }
+
+    @GetMapping("/subCategory/{subCategory}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable @Size(max = 50) String subCategory) {
+        log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
+        return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@PathVariable String id) {
+        log.info("deleteBudgetByIdV1: id=[{}]", id);
+        return ResponseEntity.ok(budgetService.deleteBudgetById(id));
+    }
+
+}

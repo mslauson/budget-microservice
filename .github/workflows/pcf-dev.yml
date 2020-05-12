@@ -1,0 +1,38 @@
+name: Build and Deploy to PCF Dev
+
+on:
+  push:
+    branches:
+      - dev
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Cache
+        uses: actions/cache@v1.1.2
+        with:
+          path: /cache
+          key: gradle
+      - name: CF Deploy
+        uses: citizen-of-planet-earth/cf-cli-action@v1
+        with:
+          cf_api: api.run.pivotal.io
+          cf_username: ${{ secrets.CF_USERNAME }}
+          cf_password: ${{ secrets.CF_PASSWORD }}
+          cf_org: Blossom Budgeting
+          # Target Space
+          cf_space: dev
+          # Command to run using CF CLI
+          command: push
