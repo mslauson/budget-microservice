@@ -64,7 +64,6 @@ public class BudgetServiceImpl implements IBudgetService {
         }
         return new BudgetResponseModel(budgetBases);
     }
-
     @Override
     public BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel) {
         log.info("getAllBudgetsByYearAndMonth");
