@@ -274,15 +274,6 @@ public class BudgetApplicationTests {
     }
 
 
-    @Test
-    void testGetBudgetByDateBadDate() throws Exception {
-        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2000-0dfsf4-01")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for monthYear is not in the correct format"));
-    }
-
 //    @Test
 //    void FTestGetBudgetByCategory() throws Exception {
 //        mockMvc.perform(get("/api/v1/budget/category/category")

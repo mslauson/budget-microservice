@@ -126,7 +126,7 @@ public class BudgetServiceImpl implements IBudgetService {
     private void checkIfDuplicateBudget(String name) {
         Long categoryCount = budgetRepo.countAllByNameAndMonthYear(
                 name,
-                DateUtils.getFirstOfMonth()
+                String.valueOf(DateUtils.getFirstOfMonth())
         );
 
         if (categoryCount != 0) {

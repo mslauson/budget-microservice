@@ -9,7 +9,6 @@ import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -23,6 +22,6 @@ public interface BudgetRepository extends MongoRepository<BudgetEntity, String> 
 
 //    List<BudgetEntity> findAllBySubCategory(String type);
 
-    Long countAllByNameAndMonthYear(String name, LocalDate localDate);
+    Long countAllByNameAndMonthYear(String name, String localDate);
 
 }
