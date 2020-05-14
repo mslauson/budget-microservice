@@ -26,6 +26,5 @@ public class GetBudgetsByMonthRequestModel {
 
     @Valid
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-
     private LocalDate monthYear;
 }
