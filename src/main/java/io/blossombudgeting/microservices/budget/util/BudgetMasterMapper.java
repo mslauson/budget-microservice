@@ -5,8 +5,8 @@
 
 package io.blossombudgeting.microservices.budget.util;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetMasterEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetMasterEntity;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class BudgetMasterMapper {
                         BudgetEntity
                                 .builder()
                                 .email(email)
-                                .monthYear(DateUtils.getFirstOfMonth())
+                                .monthYear(String.valueOf(DateUtils.getFirstOfMonth()))
                                 .name(category.getHierarchy().get(0).equals("Shops") ? "Shopping" : category.getHierarchy().get(0))
                                 .category(category.getGroup())
 //                                .subCategory(category.getHierarchy().get(category.getHierarchy().size() - 1))

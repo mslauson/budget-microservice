@@ -5,7 +5,6 @@
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
@@ -13,6 +12,7 @@ import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;

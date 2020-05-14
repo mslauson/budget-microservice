@@ -7,19 +7,16 @@ package io.blossombudgeting.microservices.budget.domain.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import io.blossombudgeting.microservices.budget.domain.entities.LinkedTransactions;
-import io.blossombudgeting.microservices.budget.domain.entities.SubCategoryDocument;
+import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
+import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,10 +39,8 @@ public class BudgetBase {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateCreated;
 
-    @NotNull
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate monthYear;
+    @NotBlank
+    private String monthYear;
 
     @NotBlank
     @Size(max = 50)

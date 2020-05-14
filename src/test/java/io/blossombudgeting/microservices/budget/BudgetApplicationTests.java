@@ -7,10 +7,10 @@ package io.blossombudgeting.microservices.budget;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.blossombudgeting.microservices.budget.domain.entities.LinkedTransactions;
-import io.blossombudgeting.microservices.budget.domain.entities.SubCategoryDocument;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
+import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
 import io.blossombudgeting.util.budgetcommonutil.model.accounts.Category;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -51,7 +51,7 @@ public class BudgetApplicationTests {
     @BeforeEach
     void setUp() {
         genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string", Collections.singletonList("String"), "String")));
-        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), DateUtils.getFirstOfMonth(), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
+        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
     }
 
     @Test

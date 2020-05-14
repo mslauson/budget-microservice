@@ -6,11 +6,10 @@
 package io.blossombudgeting.microservices.budget.domain.models;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 
 @ToString
 @Builder
@@ -25,6 +24,6 @@ public class GetBudgetsByMonthRequestModel {
     private String email;
 
     @Valid
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate monthYear;
+    @NotBlank
+    private String monthYear;
 }

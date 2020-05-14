@@ -5,12 +5,12 @@
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetMasterEntity;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.repository.IBudgetMasterRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetAdminService;
 import io.blossombudgeting.microservices.budget.util.BudgetMasterMapper;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetMasterEntity;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericNotFoundException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;

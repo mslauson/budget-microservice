@@ -5,8 +5,8 @@
 
 package io.blossombudgeting.microservices.budget.util;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.springframework.stereotype.Component;
 
