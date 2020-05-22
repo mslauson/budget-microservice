@@ -5,24 +5,23 @@
 
 package io.blossombudgeting.microservices.budget.repository;
 
-import io.blossombudgeting.microservices.budget.domain.entities.BudgetEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@Component
+@Repository
 public interface BudgetRepository extends MongoRepository<BudgetEntity, String> {
 
     List<BudgetEntity> findAllByEmail(String email);
 
-    List<BudgetEntity> findAllByEmailAndMonthYear(String email, LocalDate monthYear);
+    List<BudgetEntity> findAllByEmailAndMonthYear(String email, String monthYear);
 
     List<BudgetEntity> findAllByCategory(String category);
 
 //    List<BudgetEntity> findAllBySubCategory(String type);
 
-    Long countAllByNameAndMonthYear(String name, LocalDate localDate);
+    Long countAllByNameAndMonthYear(String name, String localDate);
 
 }

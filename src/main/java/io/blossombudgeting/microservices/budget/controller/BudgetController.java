@@ -47,7 +47,6 @@ public class BudgetController {
 
     @GetMapping("/{email}/month/{monthYear}")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@Valid GetBudgetsByMonthRequestModel requestModel) {
-
         log.info("getAllBudgetsByYearAndMonthV1: request=[{}]", requestModel);
         return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));
     }

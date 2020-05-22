@@ -41,7 +41,7 @@ ext {
 
 dependencies {
 	implementation(
-			'io.blossombudgeting.util:budget-common-util:0.0.2.19',
+			'io.blossombudgeting.util:budget-common-util:0.0.2.25',
 			'org.springdoc:springdoc-openapi-ui:1.1.30',
 			'org.springframework.boot:spring-boot-starter-security',
 			'org.springframework.boot:spring-boot-starter-data-mongodb',
