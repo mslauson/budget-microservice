@@ -14,7 +14,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GKE_ZONE: us-central1-c
   GKE_CLUSTER: dev
-  IMAGE: customer-microservice
+  IMAGE: budget-microservice
   REGISTRY_HOSTNAME: gcr.io
   DEPLOYMENT_NAME: customer-microservice
   AWS_KEY_SERVICVE: ${{ secrets.AWS_KEY_SERVICVE }}
