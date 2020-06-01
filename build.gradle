@@ -28,7 +28,7 @@ configurations {
 repositories {
 	mavenCentral()
 	maven {
-		url "https://maven.pkg.github.com/mslauson/budget-common-util"
+		url "https://maven.pkg.github.com/blossombudgeting/budget-common-util"
 		credentials {
 			username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
 			password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
