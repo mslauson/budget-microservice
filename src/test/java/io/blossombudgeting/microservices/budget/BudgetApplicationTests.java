@@ -238,22 +238,22 @@ public class BudgetApplicationTests {
         System.out.println(body);
     }
 
-//    @Test
-//    void testGetBudgetByEmailNotFound() throws Exception {
-//        mockMvc.perform(get("/api/v1/budget/email/a@a.com")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { A@A.COM }"));
-//    }
-
     @Test
-    void ETestGetBudgetByMonthYear() throws Exception {
-        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2020-05-01")
+    void testGetBudgetByEmailNotFound() throws Exception {
+        mockMvc.perform(get("/api/v1/budget/email/a@a.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { A@A.COM }"));
     }
+
+//    @Test
+//    void ETestGetBudgetByMonthYear() throws Exception {
+//        mockMvc.perform(get("/api/v1/budget/email@email.com/month/2020-05-01")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
