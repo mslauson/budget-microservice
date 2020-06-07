@@ -3,3 +3,6 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URI:mongodb+srv://mongosrvdev:ZxuF9TxpDae5dGT@dev-gngtd.azure.mongodb.net/blossom?retryWrites=true&w=majority}
+server:
+  servlet:
+    context-path: /budgets
