@@ -30,13 +30,13 @@ spec:
           readinessProbe:
             failureThreshold: 10
             httpGet:
-              path: /budgets
+              path: /
               port: 8080
               scheme: HTTP
           livenessProbe:
             failureThreshold: 10
             httpGet:
-              path: /budgets
+              path: /
               port: 8080
               scheme: HTTP
           ports:

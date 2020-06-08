@@ -56,7 +56,7 @@ public class BudgetApplicationTests {
 
     @Test
     void ATestAddBudget() throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/v1")
+        MvcResult result = mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -69,7 +69,7 @@ public class BudgetApplicationTests {
 
     @Test
     void BTestAddBudgetDuplicate() throws Exception {
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -80,7 +80,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoEmail() throws Exception {
         budgetBase.setEmail(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -91,7 +91,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetBadEmail() throws Exception {
         budgetBase.setEmail("null");
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -102,7 +102,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetShortEmail() throws Exception {
         budgetBase.setEmail("nusdfsdf");
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -113,7 +113,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetLongEmail() throws Exception {
         budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -124,7 +124,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoMonthYear() throws Exception {
         budgetBase.setMonthYear(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -135,7 +135,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoName() throws Exception {
         budgetBase.setName(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -146,7 +146,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetLongName() throws Exception {
         budgetBase.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -157,7 +157,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoCategory() throws Exception {
         budgetBase.setCategory(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -168,7 +168,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetLongCategory() throws Exception {
         budgetBase.setCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -180,7 +180,7 @@ public class BudgetApplicationTests {
 //    @Test
 //    void testAddBudgetLongSubCategory() throws Exception {
 //        budgetBase.setSubCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-//        mockMvc.perform(post("/api/v1")
+//        mockMvc.perform(post("/budgets/api/v1")
 //                .content(om.writeValueAsString(budgetBase))
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .accept(MediaType.APPLICATION_JSON))
@@ -191,7 +191,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoUsed() throws Exception {
         budgetBase.setUsed(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -202,7 +202,7 @@ public class BudgetApplicationTests {
     @Test
     void testAddBudgetNoAllocated() throws Exception {
         budgetBase.setAllocation(null);
-        mockMvc.perform(post("/api/v1")
+        mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -212,7 +212,7 @@ public class BudgetApplicationTests {
 
     @Test
     void CTestGetBudgetById() throws Exception {
-        mockMvc.perform(get("/api/v1/" + getBudgetId())
+        mockMvc.perform(get("/budgets/api/v1/" + getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -220,7 +220,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByIdNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/asdlkfj")
+        mockMvc.perform(get("/budgets/api/v1/asdlkfj")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -229,7 +229,7 @@ public class BudgetApplicationTests {
 
     @Test
     void DTestGetBudgetByEmail() throws Exception {
-        MvcResult result = mockMvc.perform(get("/api/v1/email/email@email.com")
+        MvcResult result = mockMvc.perform(get("/budgets/api/v1/email/email@email.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -240,7 +240,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByEmailNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/email/a@a.com")
+        mockMvc.perform(get("/budgets/api/v1/email/a@a.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -257,7 +257,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/email@email.com/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/email@email.com/month/2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -266,7 +266,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateBadEmail() throws Exception {
-        mockMvc.perform(get("/api/v1/emailemail.com/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/emailemail.com/month/2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -284,7 +284,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByCategoryNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/category/catesdfgory")
+        mockMvc.perform(get("/budgets/api/v1/category/catesdfgory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -293,7 +293,7 @@ public class BudgetApplicationTests {
 
     @Test
     void GTestGetBudgetBySubCategory() throws Exception {
-        mockMvc.perform(get("/api/v1/subCategory/subCategory")
+        mockMvc.perform(get("/budgets/api/v1/subCategory/subCategory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
