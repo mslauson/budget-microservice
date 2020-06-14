@@ -43,6 +43,7 @@ jobs:
       - name: Authenticate Docker
         run: |
           docker login $GITHUB_PACKAGES_LOGIN -u $GITHUB_USER -p $GITHUB_PWORD
+          cat ~/.docker/config.json > config.json
       # Build the Docker image
       - name: Build
         run: |
@@ -65,6 +66,9 @@ jobs:
       - name: Deploy
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
+          kubectl create secret generic regcred \
+                                 --from-file=.dockerconfigjson=config.json \
+                                 --type=kubernetes.io/dockerconfigjson
           ./kustomize edit set image $REGISTRY_HOSTNAME/$GITHUB_ORG/$IMAGE/$IMAGE:${GITHUB_SHA}
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME

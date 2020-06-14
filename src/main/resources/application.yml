@@ -3,3 +3,8 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URI:mongodb+srv://mongosrvdev:ZxuF9TxpDae5dGT@dev-gngtd.azure.mongodb.net/blossom?retryWrites=true&w=majority}
+springdoc:
+  swagger-ui:
+    path: /budgets/swagger-ui.html
+  api-docs:
+    path: /budgets/v3/api-docs
