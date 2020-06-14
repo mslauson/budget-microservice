@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: budget-microservice
-          image: gcr.io/budget-267523/budget-microservice:17f57f0d50e0891d2a2c7d322044a937d8f5eff6
+          image: docker.pkg.github.com/blossombudgeting/budget-microservice/budget-microservice:latest
           readinessProbe:
             failureThreshold: 10
             httpGet:
