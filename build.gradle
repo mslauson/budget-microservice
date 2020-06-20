@@ -8,6 +8,8 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'groovy'
+	id 'org.sonarqube' version '2.8'
+	id 'jacoco'
 }
 
 group = 'io.blossom.microservices'
@@ -79,3 +81,38 @@ dependencyManagement {
 test {
 	useJUnitPlatform()
 }
+
+jacoco {
+	toolVersion = "0.8.5"
+	reportsDir = file("$buildDir/customJacocoReportDir")
+}
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8
+			}
+		}
+
+		rule {
+			enabled = false
+			element = 'CLASS'
+			includes = ['org.gradle.*']
+
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 0.3
+			}
+		}
+	}
+}
+
