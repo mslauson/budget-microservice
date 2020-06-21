@@ -316,50 +316,6 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void testAddMasterNoCategories() throws Exception {
-        genericCategoryModel.setCategories(null);
-        mockMvc.perform(post("/api/v1/budget/admin/master")
-                .content(om.writeValueAsString(genericCategoryModel))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories is missing."));
-    }
-
-    @Test
-    void testAddMasterNoCategoryId() throws Exception {
-        genericCategoryModel.getCategories().get(0).setCategoryId(null);
-        mockMvc.perform(post("/api/v1/budget/admin/master")
-                .content(om.writeValueAsString(genericCategoryModel))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].categoryId is missing."));
-    }
-
-    @Test
-    void testAddMasterNoCategoryHeirarchy() throws Exception {
-        genericCategoryModel.getCategories().get(0).setHierarchy(null);
-        mockMvc.perform(post("/api/v1/budget/admin/master")
-                .content(om.writeValueAsString(genericCategoryModel))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].hierarchy is missing."));
-    }
-
-    @Test
-    void testAddMasterNoCategoryGroup() throws Exception {
-        genericCategoryModel.getCategories().get(0).setGroup(null);
-        mockMvc.perform(post("/api/v1/budget/admin/master")
-                .content(om.writeValueAsString(genericCategoryModel))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].group is missing."));
-    }
-
-    @Test
     void testHealthCheck1() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
