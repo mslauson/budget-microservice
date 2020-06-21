@@ -359,6 +359,18 @@ public class BudgetApplicationTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].group is missing."));
     }
 
+    @Test
+    void testHealthCheck1() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testHealthCheck2() throws Exception {
+        mockMvc.perform(get("/budgets"))
+                .andExpect(status().isOk());
+    }
+
     public static String getBudgetId() {
         return budgetId;
     }

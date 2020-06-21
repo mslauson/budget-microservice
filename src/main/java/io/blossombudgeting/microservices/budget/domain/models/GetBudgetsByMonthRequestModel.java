@@ -12,11 +12,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @ToString
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class GetBudgetsByMonthRequestModel {
 
     @Valid
