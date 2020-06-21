@@ -30,8 +30,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collections;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -299,31 +298,22 @@ public class BudgetApplicationTests {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    void testGetBudgetBySubCategoryNotFound() throws Exception {
-//        mockMvc.perform(get("/api/v1/subCategory/asdklfj")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this category -> { ASDKLFJ }"));
-//    }
+    @Test
+    void HTestDeleteBudgetById() throws Exception {
+        mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
-//    @Test
-//    void HTestDeleteBudgetById() throws Exception {
-//        mockMvc.perform(delete("/api/v1/" + getBudgetId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    void testDeleteBudgetById() throws Exception {
-//        mockMvc.perform(delete("/api/v1/" + getBudgetId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
-//    }
+    @Test
+    void testDeleteBudgetById() throws Exception {
+        mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
+    }
 
     @Test
     void testAddMasterNoCategories() throws Exception {
