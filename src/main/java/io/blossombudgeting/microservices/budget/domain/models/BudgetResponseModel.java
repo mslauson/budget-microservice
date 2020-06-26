@@ -9,10 +9,8 @@ import lombok.*;
 
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class BudgetResponseModel {

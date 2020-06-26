@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/budget")
+@RequestMapping("/budgets/api/v1")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BudgetController {
 

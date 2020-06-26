@@ -94,15 +94,6 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsBySubCategory(String type) {
         log.info("getAllBudgetsByType: type=[{}]", type);
-//        List<BudgetBase> budgets = budgetRepo.findAllBySubCategory(type)
-//                .stream()
-//                .map(budgetMapper::convertToBudgetBase)
-//                .collect(Collectors.toList());
-//        if (budgets.isEmpty()) {
-//            throw new BudgetNotFoundException("No budgets were found for this category -> { " + type + " }");
-//        }
-//        return new BudgetResponseModel(budgets);
-
         return null;
     }
 

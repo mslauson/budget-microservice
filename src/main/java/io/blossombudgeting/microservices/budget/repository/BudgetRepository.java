@@ -20,8 +20,6 @@ public interface BudgetRepository extends MongoRepository<BudgetEntity, String> 
 
     List<BudgetEntity> findAllByCategory(String category);
 
-//    List<BudgetEntity> findAllBySubCategory(String type);
-
     Long countAllByNameAndMonthYear(String name, String localDate);
 
 }
