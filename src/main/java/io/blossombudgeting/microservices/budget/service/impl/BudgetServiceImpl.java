@@ -46,9 +46,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getBudgetById(String id) {
         log.info("getBudgetById: id=[{}]", id);
-        BudgetEntity budgetEntity = budgetRepo
-                .findById(id)
-                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + id + "] not found"));
+        BudgetEntity budgetEntity = getBudgetEntityById(id);
         BudgetBase budget = budgetMapper.convertToBudgetBase(budgetEntity);
         return new BudgetResponseModel(Collections.singletonList(budget));
     }
@@ -100,7 +98,10 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public GenericSuccessResponseModel updateBudget(UpdateBudgetRequestModel requestModel) {
-        return null;
+        BudgetEntity entity = budgetMapper.covertToEntity(requestModel);
+
+
+        return new GenericSuccessResponseModel(true);
     }
 
     @Override
@@ -131,6 +132,18 @@ public class BudgetServiceImpl implements IBudgetService {
                     "A budget in this category/subCategory already exists"
             );
         }
+    }
+
+    /**
+     * Grabs the entity of the given budget id
+     *
+     * @param budgetId  Id of the budget
+     * @return          Budget Entity
+     */
+    private BudgetEntity getBudgetEntityById(String budgetId){
+       return budgetRepo
+                .findById(budgetId)
+                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
     }
 
 }
