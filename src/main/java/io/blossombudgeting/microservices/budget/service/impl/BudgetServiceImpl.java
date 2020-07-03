@@ -8,6 +8,7 @@ package io.blossombudgeting.microservices.budget.service.impl;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
@@ -94,6 +95,11 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsBySubCategory(String type) {
         log.info("getAllBudgetsByType: type=[{}]", type);
+        return null;
+    }
+
+    @Override
+    public GenericSuccessResponseModel updateBudget(UpdateBudgetRequestModel requestModel) {
         return null;
     }
 
