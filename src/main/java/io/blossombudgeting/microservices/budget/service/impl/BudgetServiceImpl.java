@@ -98,9 +98,9 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public GenericSuccessResponseModel updateBudget(UpdateBudgetRequestModel requestModel) {
+        getBudgetEntityById(requestModel.getId());
         BudgetEntity entity = budgetMapper.covertToEntity(requestModel);
-
-
+        budgetRepo.save(entity);
         return new GenericSuccessResponseModel(true);
     }
 
