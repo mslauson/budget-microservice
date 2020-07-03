@@ -65,9 +65,9 @@ public class BudgetController {
     }
 
     @PutMapping
-    public ResponseEntity<BudgetResponseModel> updateBudgetV1(@Valid @RequestBody UpdateBudgetRequestModel requestModel) {
+    public ResponseEntity<GenericSuccessResponseModel> updateBudgetV1(@Valid @RequestBody UpdateBudgetRequestModel requestModel) {
         log.info("updateBudgetV1: type=[{}]", requestModel);
-        return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
+        return ResponseEntity.ok(budgetService.updateBudget(requestModel));
     }
 
     @DeleteMapping("/{id}")
