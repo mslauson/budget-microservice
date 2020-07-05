@@ -299,7 +299,150 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void HTestDeleteBudgetById() throws Exception {
+    void HTestUpdateBudget() throws Exception {
+        budgetBase.setId(getBudgetId());
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateBudgetNoEmail() throws Exception {
+        budgetBase.setEmail(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
+    }
+
+    @Test
+    void testUpdateBudgetBadEmail() throws Exception {
+        budgetBase.setEmail("null");
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
+    }
+
+    @Test
+    void testUpdateBudgetShortEmail() throws Exception {
+        budgetBase.setEmail("nusdfsdf");
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
+    }
+
+    @Test
+    void testUpdateBudgetLongEmail() throws Exception {
+        budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email does not have a valid length"));
+    }
+
+    @Test
+    void testUpdateBudgetNoMonthYear() throws Exception {
+        budgetBase.setMonthYear(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param monthYear is missing."));
+    }
+
+    @Test
+    void testUpdateBudgetNoName() throws Exception {
+        budgetBase.setName(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param name is missing."));
+    }
+
+    @Test
+    void testUpdateBudgetLongName() throws Exception {
+        budgetBase.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for name does not have a valid length"));
+    }
+
+    @Test
+    void testUpdateBudgetNoCategory() throws Exception {
+        budgetBase.setCategory(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param category is missing."));
+    }
+
+    @Test
+    void testUpdateBudgetLongCategory() throws Exception {
+        budgetBase.setCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
+    }
+
+
+//    @Test
+//    void testUpdateBudgetLongSubCategory() throws Exception {
+//        budgetBase.setSubCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+//        mockMvc.perform(put("/budgets/api/v1")
+//                .content(om.writeValueAsString(budgetBase))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for subCategory does not have a valid length"));
+//    }
+
+    @Test
+    void testUpdateBudgetNoUsed() throws Exception {
+        budgetBase.setUsed(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param used is missing."));
+    }
+
+    @Test
+    void testUpdateBudgetNoAllocated() throws Exception {
+        budgetBase.setAllocation(null);
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param allocation is missing."));
+    }
+
+    @Test
+    void ITestDeleteBudgetById() throws Exception {
         mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
