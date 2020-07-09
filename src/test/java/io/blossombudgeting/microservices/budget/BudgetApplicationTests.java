@@ -246,14 +246,6 @@ public class BudgetApplicationTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { A@A.COM }"));
     }
 
-//    @Test
-//    void ETestGetBudgetByMonthYear() throws Exception {
-//        mockMvc.perform(get("/api/v1/email@email.com/month/2020-05-01")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
         mockMvc.perform(get("/budgets/api/v1/email@email.com/month/2000-04-01")
@@ -271,15 +263,6 @@ public class BudgetApplicationTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
     }
-
-
-//    @Test
-//    void FTestGetBudgetByCategory() throws Exception {
-//        mockMvc.perform(get("/api/v1/category/category")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     void testGetBudgetByCategoryNotFound() throws Exception {
@@ -406,18 +389,6 @@ public class BudgetApplicationTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
     }
-
-
-//    @Test
-//    void testUpdateBudgetLongSubCategory() throws Exception {
-//        budgetBase.setSubCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-//        mockMvc.perform(put("/budgets/api/v1")
-//                .content(om.writeValueAsString(budgetBase))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for subCategory does not have a valid length"));
-//    }
 
     @Test
     void testUpdateBudgetNoUsed() throws Exception {
