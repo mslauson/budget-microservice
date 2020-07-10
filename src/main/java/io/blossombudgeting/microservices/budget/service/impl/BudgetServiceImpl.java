@@ -8,6 +8,7 @@ package io.blossombudgeting.microservices.budget.service.impl;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
@@ -45,9 +46,7 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getBudgetById(String id) {
         log.info("getBudgetById: id=[{}]", id);
-        BudgetEntity budgetEntity = budgetRepo
-                .findById(id)
-                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + id + "] not found"));
+        BudgetEntity budgetEntity = getBudgetEntityById(id);
         BudgetBase budget = budgetMapper.convertToBudgetBase(budgetEntity);
         return new BudgetResponseModel(Collections.singletonList(budget));
     }
@@ -98,6 +97,13 @@ public class BudgetServiceImpl implements IBudgetService {
     }
 
     @Override
+    public GenericSuccessResponseModel updateBudget(UpdateBudgetRequestModel requestModel) {
+        BudgetEntity entity = getBudgetEntityById(requestModel.getId());
+        budgetRepo.save(budgetMapper.updateCurrentEntity(requestModel, entity));
+        return new GenericSuccessResponseModel(true);
+    }
+
+    @Override
     public GenericSuccessResponseModel deleteBudgetById(String id) {
         log.info("deleteBudget: id=[{}]", id);
         if (!budgetRepo.existsById(id)){
@@ -125,6 +131,18 @@ public class BudgetServiceImpl implements IBudgetService {
                     "A budget in this category/subCategory already exists"
             );
         }
+    }
+
+    /**
+     * Grabs the entity of the given budget id
+     *
+     * @param budgetId  Id of the budget
+     * @return          Budget Entity
+     */
+    private BudgetEntity getBudgetEntityById(String budgetId){
+       return budgetRepo
+                .findById(budgetId)
+                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
     }
 
 }

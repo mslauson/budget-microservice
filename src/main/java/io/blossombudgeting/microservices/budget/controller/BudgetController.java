@@ -8,6 +8,7 @@ package io.blossombudgeting.microservices.budget.controller;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetRequestModel;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,12 @@ public class BudgetController {
     public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable @Size(max = 50) String subCategory) {
         log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
         return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
+    }
+
+    @PutMapping
+    public ResponseEntity<GenericSuccessResponseModel> updateBudgetV1(@Valid @RequestBody UpdateBudgetRequestModel requestModel) {
+        log.info("updateBudgetV1: type=[{}]", requestModel);
+        return ResponseEntity.ok(budgetService.updateBudget(requestModel));
     }
 
     @DeleteMapping("/{id}")
