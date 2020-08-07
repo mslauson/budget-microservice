@@ -78,7 +78,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testAddBudgetNoEmail() throws Exception {
-        budgetBase.setEmail(null);
+        budgetBase.setPhone(null);
         mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +89,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testAddBudgetBadEmail() throws Exception {
-        budgetBase.setEmail("null");
+        budgetBase.setPhone("null");
         mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +100,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testAddBudgetShortEmail() throws Exception {
-        budgetBase.setEmail("nusdfsdf");
+        budgetBase.setPhone("nusdfsdf");
         mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testAddBudgetLongEmail() throws Exception {
-        budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
+        budgetBase.setPhone("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
         mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -293,7 +293,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testUpdateBudgetNoEmail() throws Exception {
-        budgetBase.setEmail(null);
+        budgetBase.setPhone(null);
         mockMvc.perform(put("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -304,7 +304,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testUpdateBudgetBadEmail() throws Exception {
-        budgetBase.setEmail("null");
+        budgetBase.setPhone("null");
         mockMvc.perform(put("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -315,7 +315,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testUpdateBudgetShortEmail() throws Exception {
-        budgetBase.setEmail("nusdfsdf");
+        budgetBase.setPhone("nusdfsdf");
         mockMvc.perform(put("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +326,7 @@ public class BudgetApplicationTests {
 
     @Test
     void testUpdateBudgetLongEmail() throws Exception {
-        budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
+        budgetBase.setPhone("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
         mockMvc.perform(put("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
