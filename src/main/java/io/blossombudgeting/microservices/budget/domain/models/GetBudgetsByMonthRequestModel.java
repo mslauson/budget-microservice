@@ -11,7 +11,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @ToString
@@ -21,7 +20,6 @@ import javax.validation.constraints.NotBlank;
 public class GetBudgetsByMonthRequestModel {
 
     @Valid
-    @Email
     private String phone;
 
     @Valid
