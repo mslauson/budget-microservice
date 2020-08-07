@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface BudgetRepository extends MongoRepository<BudgetEntity, String> {
 
-    List<BudgetEntity> findAllByEmail(String email);
+    List<BudgetEntity> findAllByPhone(String phone);
 
-    List<BudgetEntity> findAllByEmailAndMonthYear(String email, String monthYear);
+    List<BudgetEntity> findAllByPhoneAndMonthYear(String phone, String monthYear);
 
     List<BudgetEntity> findAllByCategory(String category);
 
