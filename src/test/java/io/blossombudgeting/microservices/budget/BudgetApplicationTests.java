@@ -11,8 +11,6 @@ import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
-import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
-import io.blossombudgeting.util.budgetcommonutil.model.accounts.Category;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -44,12 +42,10 @@ public class BudgetApplicationTests {
     @Autowired
     MockMvc mockMvc;
     private final ObjectMapper om = new ObjectMapper();
-    private GenericCategoryModel genericCategoryModel;
     private BudgetBase budgetBase;
 
     @BeforeEach
     void setUp() {
-        genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string", Collections.singletonList("String"), "String")));
         budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
     }
 
@@ -141,18 +137,6 @@ public class BudgetApplicationTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
     }
-
-
-//    @Test
-//    void testAddBudgetLongSubCategory() throws Exception {
-//        budgetBase.setSubCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-//        mockMvc.perform(post("/budgets/api/v1")
-//                .content(om.writeValueAsString(budgetBase))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for subCategory does not have a valid length"));
-//    }
 
     @Test
     void testAddBudgetNoUsed() throws Exception {
