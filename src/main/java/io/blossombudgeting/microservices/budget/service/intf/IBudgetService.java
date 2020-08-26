@@ -17,7 +17,7 @@ public interface IBudgetService {
 
     BudgetResponseModel getBudgetById(String id);
 
-    BudgetResponseModel getAllBudgetsByEmail(String username);
+    BudgetResponseModel getAllBudgetsByPhone(String phone);
 
     BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel);
 

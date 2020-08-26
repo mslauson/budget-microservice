@@ -52,21 +52,22 @@ public class BudgetServiceImpl implements IBudgetService {
     }
 
     @Override
-    public BudgetResponseModel getAllBudgetsByEmail(String email) {
-        log.info("getAllBudgetsByUsername: email=[{}]", email);
-        List<BudgetBase> budgetBases = budgetRepo.findAllByEmail(email.toLowerCase())
+    public BudgetResponseModel getAllBudgetsByPhone(String phone) {
+        log.info("getAllBudgetsByUsername: phone=[{}]", phone);
+        List<BudgetBase> budgetBases = budgetRepo.findAllByPhone(phone)
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
         if (budgetBases.isEmpty()) {
-            throw new BudgetNotFoundException("No budgets were found for this user -> { " + email + " }");
+            throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
         }
         return new BudgetResponseModel(budgetBases);
     }
+
     @Override
     public BudgetResponseModel getAllBudgetsByYearAndMonth(GetBudgetsByMonthRequestModel requestModel) {
-        log.info("getAllBudgetsByYearAndMonth: email=[{}]", requestModel.getEmail());
-        List<BudgetBase> budgets = budgetRepo.findAllByEmailAndMonthYear(requestModel.getEmail().toLowerCase()
+        log.info("getAllBudgetsByYearAndMonth: phone=[{}]", requestModel.getPhone());
+        List<BudgetBase> budgets = budgetRepo.findAllByPhoneAndMonthYear(requestModel.getPhone()
                 , requestModel.getMonthYear())
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)

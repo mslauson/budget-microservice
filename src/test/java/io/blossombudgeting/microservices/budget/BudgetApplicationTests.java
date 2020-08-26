@@ -11,8 +11,6 @@ import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
-import io.blossombudgeting.util.budgetcommonutil.model.GenericCategoryModel;
-import io.blossombudgeting.util.budgetcommonutil.model.accounts.Category;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -44,13 +42,11 @@ public class BudgetApplicationTests {
     @Autowired
     MockMvc mockMvc;
     private final ObjectMapper om = new ObjectMapper();
-    private GenericCategoryModel genericCategoryModel;
     private BudgetBase budgetBase;
 
     @BeforeEach
     void setUp() {
-        genericCategoryModel = new GenericCategoryModel(Collections.singletonList(new Category("string", Collections.singletonList("String"), "String")));
-        budgetBase = new BudgetBase("id", "email@email.com", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
+        budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
     }
 
     @Test
@@ -78,46 +74,13 @@ public class BudgetApplicationTests {
 
     @Test
     void testAddBudgetNoEmail() throws Exception {
-        budgetBase.setEmail(null);
+        budgetBase.setPhone(null);
         mockMvc.perform(post("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
-    }
-
-    @Test
-    void testAddBudgetBadEmail() throws Exception {
-        budgetBase.setEmail("null");
-        mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
-    }
-
-    @Test
-    void testAddBudgetShortEmail() throws Exception {
-        budgetBase.setEmail("nusdfsdf");
-        mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
-    }
-
-    @Test
-    void testAddBudgetLongEmail() throws Exception {
-        budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
-        mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email does not have a valid length"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
     }
 
     @Test
@@ -175,18 +138,6 @@ public class BudgetApplicationTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
     }
 
-
-//    @Test
-//    void testAddBudgetLongSubCategory() throws Exception {
-//        budgetBase.setSubCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-//        mockMvc.perform(post("/budgets/api/v1")
-//                .content(om.writeValueAsString(budgetBase))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for subCategory does not have a valid length"));
-//    }
-
     @Test
     void testAddBudgetNoUsed() throws Exception {
         budgetBase.setUsed(null);
@@ -228,7 +179,7 @@ public class BudgetApplicationTests {
 
     @Test
     void DTestGetBudgetByEmail() throws Exception {
-        MvcResult result = mockMvc.perform(get("/budgets/api/v1/email/email@email.com")
+        MvcResult result = mockMvc.perform(get("/budgets/api/v1/phone/12345678901")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -239,16 +190,16 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByEmailNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/email/a@a.com")
+        mockMvc.perform(get("/budgets/api/v1/phone/0000000000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { A@A.COM }"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { 0000000000 }"));
     }
 
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/email@email.com/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/12345678901/month/2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -257,11 +208,11 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateBadEmail() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/emailemail.com/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/phonephone.com/month/2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this month -> { 2000-04-01 }"));
     }
 
     @Test
@@ -293,46 +244,13 @@ public class BudgetApplicationTests {
 
     @Test
     void testUpdateBudgetNoEmail() throws Exception {
-        budgetBase.setEmail(null);
+        budgetBase.setPhone(null);
         mockMvc.perform(put("/budgets/api/v1")
                 .content(om.writeValueAsString(budgetBase))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param email is missing."));
-    }
-
-    @Test
-    void testUpdateBudgetBadEmail() throws Exception {
-        budgetBase.setEmail("null");
-        mockMvc.perform(put("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
-    }
-
-    @Test
-    void testUpdateBudgetShortEmail() throws Exception {
-        budgetBase.setEmail("nusdfsdf");
-        mockMvc.perform(put("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email is not in the correct format"));
-    }
-
-    @Test
-    void testUpdateBudgetLongEmail() throws Exception {
-        budgetBase.setEmail("nuaslkdjflsdkjflskdjflsksdfsdfsdfsdfj@gmail.com");
-        mockMvc.perform(put("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for email does not have a valid length"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
     }
 
     @Test

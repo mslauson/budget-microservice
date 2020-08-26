@@ -40,13 +40,13 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getBudgetById(id));
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByEmailV1(@PathVariable @Size(min = 4, max = 30) String email) {
-        log.info("getAllBudgetsByEmailV1: email=[{}]", email);
-        return ResponseEntity.ok(budgetService.getAllBudgetsByEmail(email.toUpperCase()));
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByPhoneV1(@PathVariable String phone) {
+        log.info("getAllBudgetsByPhoneV1: phone=[{}]", phone);
+        return ResponseEntity.ok(budgetService.getAllBudgetsByPhone(phone));
     }
 
-    @GetMapping("/{email}/month/{monthYear}")
+    @GetMapping("/{phone}/month/{monthYear}")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@Valid GetBudgetsByMonthRequestModel requestModel) {
         log.info("getAllBudgetsByYearAndMonthV1: request=[{}]", requestModel);
         return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));

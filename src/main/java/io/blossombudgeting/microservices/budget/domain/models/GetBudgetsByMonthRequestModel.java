@@ -5,10 +5,12 @@
 
 package io.blossombudgeting.microservices.budget.domain.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @ToString
@@ -18,8 +20,7 @@ import javax.validation.constraints.NotBlank;
 public class GetBudgetsByMonthRequestModel {
 
     @Valid
-    @Email
-    private String email;
+    private String phone;
 
     @Valid
     @NotBlank
