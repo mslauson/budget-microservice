@@ -191,7 +191,7 @@ public class BudgetServiceImpl implements IBudgetService {
                 for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
                     boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
                     if (matches) {
-                        List<LinkedTransactions> newLinked = budgetEntity.getLinkedTransactions()
+                        List<LinkedTransactions> newLinked = subCat.getLinkedTransactions()
                                 .stream()
                                 .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
                                 .collect(Collectors.toList());
