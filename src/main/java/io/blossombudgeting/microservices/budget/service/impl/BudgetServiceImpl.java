@@ -185,8 +185,9 @@ public class BudgetServiceImpl implements IBudgetService {
                 }
             });
 
-            budgetEntity.getSubCategory().forEach(subCat ->{
-                subCat.getLinkedTransactions().forEach(transaction -> {
+            int i = 0;
+            for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
+                for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
                     boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
                     if (matches) {
                         List<LinkedTransactions> newLinked = budgetEntity.getLinkedTransactions()
@@ -194,9 +195,11 @@ public class BudgetServiceImpl implements IBudgetService {
                                 .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
                                 .collect(Collectors.toList());
                         subCat.setLinkedTransactions(newLinked);
+                        budgetEntity.getSubCategory().set(i, subCat);
                     }
-                });
-            });
+                }
+                i++;
+            }
         });
     }
 
