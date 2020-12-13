@@ -214,10 +214,16 @@ public class BudgetServiceImpl implements IBudgetService {
             for (LinkedTransactions linkedTransactions : budgetEntity.getLinkedTransactions()) {
                 newUsed = newUsed + linkedTransactions.getAmount();
             }
+            int i = 0;
             for (SubCategoryDocument subCategoryDocument : budgetEntity.getSubCategory()) {
+                double subUsed = 0d;
                 for (LinkedTransactions linkedTransaction : subCategoryDocument.getLinkedTransactions()){
+                    subUsed = subUsed + linkedTransaction.getAmount();
                     newUsed = newUsed + linkedTransaction.getAmount();
                 }
+                subCategoryDocument.setUsed(subUsed);
+                budgetEntity.getSubCategory().set(i, subCategoryDocument);
+                i++;
             }
             budgetEntity.setUsed(newUsed);
         });
