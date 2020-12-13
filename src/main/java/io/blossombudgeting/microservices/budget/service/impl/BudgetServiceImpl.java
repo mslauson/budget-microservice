@@ -12,6 +12,7 @@ import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
+import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -116,6 +117,7 @@ public class BudgetServiceImpl implements IBudgetService {
         long start = System.currentTimeMillis();
         List<BudgetEntity> budgetEntities = getBudgetsByPhone(requestModel.getPhone());
         removeTransactionsFromBudgets(budgetEntities, requestModel.getTransactionIds());
+        recalculateUsed(budgetEntities);
         log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
         return new GenericSuccessResponseModel(true);
     }
@@ -195,6 +197,26 @@ public class BudgetServiceImpl implements IBudgetService {
                     }
                 });
             });
+        });
+    }
+
+    /**
+     * Recalculate used after transactions are removed
+     *
+     * @param budgetEntities to update
+     */
+    private void recalculateUsed(List<BudgetEntity> budgetEntities){
+        budgetEntities.forEach(budgetEntity -> {
+            double newUsed = 0d;
+            for (LinkedTransactions linkedTransactions : budgetEntity.getLinkedTransactions()) {
+                newUsed = newUsed + linkedTransactions.getAmount();
+            }
+            for (SubCategoryDocument subCategoryDocument : budgetEntity.getSubCategory()) {
+                for (LinkedTransactions linkedTransaction : subCategoryDocument.getLinkedTransactions()){
+                    newUsed = newUsed + linkedTransaction.getAmount();
+                }
+            }
+            budgetEntity.setUsed(newUsed);
         });
     }
 
