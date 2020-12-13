@@ -118,6 +118,7 @@ public class BudgetServiceImpl implements IBudgetService {
         List<BudgetEntity> budgetEntities = getBudgetsByPhone(requestModel.getPhone());
         removeTransactionsFromBudgets(budgetEntities, requestModel.getTransactionIds());
         recalculateUsed(budgetEntities);
+        budgetRepo.saveAll(budgetEntities);
         log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
         return new GenericSuccessResponseModel(true);
     }
