@@ -112,7 +112,10 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public GenericSuccessResponseModel removeTransactionsWhenAccountDeleted(RemoveTransactionsRequestModel requestModel) {
-        return null;
+        long start = System.currentTimeMillis();
+        List<BudgetEntity> budgetEntities = getBudgetsByPhone(requestModel.getPhone());
+        log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
+        return new GenericSuccessResponseModel(true);
     }
 
     /**
