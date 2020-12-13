@@ -11,6 +11,7 @@ import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -114,6 +115,7 @@ public class BudgetServiceImpl implements IBudgetService {
     public GenericSuccessResponseModel removeTransactionsWhenAccountDeleted(RemoveTransactionsRequestModel requestModel) {
         long start = System.currentTimeMillis();
         List<BudgetEntity> budgetEntities = getBudgetsByPhone(requestModel.getPhone());
+        removeTransactionsFromBudgets(budgetEntities, requestModel.getTransactionIds());
         log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
         return new GenericSuccessResponseModel(true);
     }
@@ -160,6 +162,40 @@ public class BudgetServiceImpl implements IBudgetService {
             throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
         }
         return budgetBases;
+    }
+
+    /**
+     * Removes transactions from budget entities
+     *
+     * @param budgetEntities  to check
+     * @param transactionIds to remove
+     */
+    private void removeTransactionsFromBudgets(List<BudgetEntity> budgetEntities, List<String> transactionIds){
+        budgetEntities.forEach(budgetEntity -> {
+            budgetEntity.getLinkedTransactions().forEach(transaction ->{
+                boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
+                if (matches){
+                   List<LinkedTransactions> newLinked =  budgetEntity.getLinkedTransactions()
+                            .stream()
+                            .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
+                            .collect(Collectors.toList());
+                   budgetEntity.setLinkedTransactions(newLinked);
+                }
+            });
+
+            budgetEntity.getSubCategory().forEach(subCat ->{
+                subCat.getLinkedTransactions().forEach(transaction -> {
+                    boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
+                    if (matches) {
+                        List<LinkedTransactions> newLinked = budgetEntity.getLinkedTransactions()
+                                .stream()
+                                .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
+                                .collect(Collectors.toList());
+                        subCat.setLinkedTransactions(newLinked);
+                    }
+                });
+            });
+        });
     }
 
 }
