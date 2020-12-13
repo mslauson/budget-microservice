@@ -51,13 +51,10 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByPhone(String phone) {
         log.info("getAllBudgetsByUsername: phone=[{}]", phone);
-        List<BudgetBase> budgetBases = budgetRepo.findAllByPhone(phone)
+        List<BudgetBase> budgetBases = getBudgetsByPhone(phone)
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgetBases.isEmpty()) {
-            throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
-        }
         return new BudgetResponseModel(budgetBases);
     }
 
@@ -146,6 +143,20 @@ public class BudgetServiceImpl implements IBudgetService {
        return budgetRepo
                 .findById(budgetId)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
+    }
+
+    /**
+     * gets all budgets by phone
+     *
+     * @param phone users phone
+     * @return list of budgets
+     */
+    private List<BudgetEntity> getBudgetsByPhone(String phone){
+        List<BudgetEntity> budgetBases = budgetRepo.findAllByPhone(phone);
+        if (budgetBases.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
+        }
+        return budgetBases;
     }
 
 }
