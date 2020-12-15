@@ -9,6 +9,7 @@ package io.blossombudgeting.microservices.budget;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
+import io.blossombudgeting.microservices.budget.domain.models.RemoveTransactionsRequestModel;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,10 +45,16 @@ public class BudgetApplicationTests {
     MockMvc mockMvc;
     private final ObjectMapper om = new ObjectMapper();
     private BudgetBase budgetBase;
+    private RemoveTransactionsRequestModel removeTransactionsRequestModel;
 
     @BeforeEach
     void setUp() {
-        budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(new SubCategoryDocument()), 0D, 0D, false, Collections.singletonList(new LinkedTransactions()));
+        SubCategoryDocument subCategoryDocument = new SubCategoryDocument();
+        subCategoryDocument.setLinkedTransactions(List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
+        budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(subCategoryDocument), 0D, 0D, false, List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
+        removeTransactionsRequestModel = new RemoveTransactionsRequestModel();
+        removeTransactionsRequestModel.setPhone("12345678901");
+        removeTransactionsRequestModel.setTransactionIds(List.of("id"));
     }
 
     @Test
@@ -331,7 +339,27 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void ITestDeleteBudgetById() throws Exception {
+    void ITestDeleteRemoveTransaction() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/remove/transactions")
+                .content(om.writeValueAsString(removeTransactionsRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testDeleteRemoveTransactionsNotFound() throws Exception {
+        removeTransactionsRequestModel.setPhone("sdf");
+        mockMvc.perform(put("/budgets/api/v1/remove/transactions")
+                .content(om.writeValueAsString(removeTransactionsRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budgets were found for this user -> { sdf }"));
+    }
+
+    @Test
+    void JTestDeleteBudgetById() throws Exception {
         mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

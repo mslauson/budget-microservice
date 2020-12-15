@@ -5,15 +5,14 @@
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
-import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
-import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
+import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
+import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -54,13 +53,10 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public BudgetResponseModel getAllBudgetsByPhone(String phone) {
         log.info("getAllBudgetsByUsername: phone=[{}]", phone);
-        List<BudgetBase> budgetBases = budgetRepo.findAllByPhone(phone)
+        List<BudgetBase> budgetBases = getBudgetsByPhone(phone)
                 .stream()
                 .map(budgetMapper::convertToBudgetBase)
                 .collect(Collectors.toList());
-        if (budgetBases.isEmpty()) {
-            throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
-        }
         return new BudgetResponseModel(budgetBases);
     }
 
@@ -116,6 +112,17 @@ public class BudgetServiceImpl implements IBudgetService {
         return new GenericSuccessResponseModel(!budgetRepo.existsById(id));
     }
 
+    @Override
+    public GenericSuccessResponseModel removeTransactionsWhenAccountDeleted(RemoveTransactionsRequestModel requestModel) {
+        long start = System.currentTimeMillis();
+        List<BudgetEntity> budgetEntities = getBudgetsByPhone(requestModel.getPhone());
+        removeTransactionsFromBudgets(budgetEntities, requestModel.getTransactionIds());
+        recalculateUsed(budgetEntities);
+        budgetRepo.saveAll(budgetEntities);
+        log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
+        return new GenericSuccessResponseModel(true);
+    }
+
     /**
      * Checks to see if budget is duplicate
      *
@@ -144,6 +151,83 @@ public class BudgetServiceImpl implements IBudgetService {
        return budgetRepo
                 .findById(budgetId)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
+    }
+
+    /**
+     * gets all budgets by phone
+     *
+     * @param phone users phone
+     * @return list of budgets
+     */
+    private List<BudgetEntity> getBudgetsByPhone(String phone){
+        List<BudgetEntity> budgetBases = budgetRepo.findAllByPhone(phone);
+        if (budgetBases.isEmpty()) {
+            throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
+        }
+        return budgetBases;
+    }
+
+    /**
+     * Removes transactions from budget entities
+     *
+     * @param budgetEntities  to check
+     * @param transactionIds to remove
+     */
+    private void removeTransactionsFromBudgets(List<BudgetEntity> budgetEntities, List<String> transactionIds){
+        budgetEntities.forEach(budgetEntity -> {
+            budgetEntity.getLinkedTransactions().forEach(transaction ->{
+                boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
+                if (matches){
+                   List<LinkedTransactions> newLinked =  budgetEntity.getLinkedTransactions()
+                            .stream()
+                            .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
+                            .collect(Collectors.toList());
+                   budgetEntity.setLinkedTransactions(newLinked);
+                }
+            });
+
+            int i = 0;
+            for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
+                for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
+                    boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
+                    if (matches) {
+                        List<LinkedTransactions> newLinked = subCat.getLinkedTransactions()
+                                .stream()
+                                .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
+                                .collect(Collectors.toList());
+                        subCat.setLinkedTransactions(newLinked);
+                        budgetEntity.getSubCategory().set(i, subCat);
+                    }
+                }
+                i++;
+            }
+        });
+    }
+
+    /**
+     * Recalculate used after transactions are removed
+     *
+     * @param budgetEntities to update
+     */
+    private void recalculateUsed(List<BudgetEntity> budgetEntities){
+        budgetEntities.forEach(budgetEntity -> {
+            double newUsed = 0d;
+            for (LinkedTransactions linkedTransactions : budgetEntity.getLinkedTransactions()) {
+                newUsed = newUsed + linkedTransactions.getAmount();
+            }
+            int i = 0;
+            for (SubCategoryDocument subCategoryDocument : budgetEntity.getSubCategory()) {
+                double subUsed = 0d;
+                for (LinkedTransactions linkedTransaction : subCategoryDocument.getLinkedTransactions()){
+                    subUsed = subUsed + linkedTransaction.getAmount();
+                    newUsed = newUsed + linkedTransaction.getAmount();
+                }
+                subCategoryDocument.setUsed(subUsed);
+                budgetEntity.getSubCategory().set(i, subCategoryDocument);
+                i++;
+            }
+            budgetEntity.setUsed(newUsed);
+        });
     }
 
 }

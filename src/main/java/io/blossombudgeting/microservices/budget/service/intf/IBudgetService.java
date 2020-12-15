@@ -5,10 +5,7 @@
 
 package io.blossombudgeting.microservices.budget.service.intf;
 
-import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossombudgeting.microservices.budget.domain.models.GetBudgetsByMonthRequestModel;
-import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 
 public interface IBudgetService {
@@ -28,5 +25,7 @@ public interface IBudgetService {
     GenericSuccessResponseModel updateBudget(UpdateBudgetRequestModel requestModel);
 
     GenericSuccessResponseModel deleteBudgetById(String id);
+
+    GenericSuccessResponseModel removeTransactionsWhenAccountDeleted(RemoveTransactionsRequestModel requestModel);
 
 }
