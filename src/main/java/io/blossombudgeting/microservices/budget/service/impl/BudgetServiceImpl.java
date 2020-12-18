@@ -188,6 +188,7 @@ public class BudgetServiceImpl implements IBudgetService {
 
             int i = 0;
             for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
+                int changed = 0;
                 for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
                     boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
                     if (matches) {
@@ -197,9 +198,11 @@ public class BudgetServiceImpl implements IBudgetService {
                                 .collect(Collectors.toList());
                         subCat.setLinkedTransactions(newLinked);
                         budgetEntity.getSubCategory().set(i, subCat);
+                        changed ++;
                     }
                 }
                 i++;
+                log.info("Removed {} transactions from budget {}", changed, subCat.getId());
             }
         });
     }
