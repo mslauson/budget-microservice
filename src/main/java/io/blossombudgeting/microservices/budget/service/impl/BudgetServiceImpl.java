@@ -204,9 +204,13 @@ public class BudgetServiceImpl implements IBudgetService {
                     }
                 }
                 i++;
-                log.info("Removed {} transactions from budget {}", changed, subCat.getId());
+                if (changed !=0) {
+                    log.info("Removed {} transactions from budget {}", changed, subCat.getId());
+                }
             }
-            log.info("Removed {} transactions from budget {}", mainChanged, budgetEntity.getId());
+            if (mainChanged != 0 ) {
+                log.info("Removed {} transactions from budget {}", mainChanged, budgetEntity.getId());
+            }
         });
     }
 
