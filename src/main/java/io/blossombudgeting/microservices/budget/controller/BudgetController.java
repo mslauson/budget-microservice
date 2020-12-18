@@ -69,7 +69,7 @@ public class BudgetController {
 
     @PutMapping("/remove/transactions")
     public ResponseEntity<GenericSuccessResponseModel> removeDeletedAccountsTransactionsV1(@Valid @RequestBody RemoveTransactionsRequestModel requestModel) {
-        log.info("updateBudgetV1: type=[{}]", requestModel);
+        log.info("removeDeletedAccountsTransactionsV1: request=[{}]", requestModel.toString());
         return ResponseEntity.ok(budgetService.removeTransactionsWhenAccountDeleted(requestModel));
     }
 
