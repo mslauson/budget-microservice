@@ -175,19 +175,22 @@ public class BudgetServiceImpl implements IBudgetService {
      */
     private void removeTransactionsFromBudgets(List<BudgetEntity> budgetEntities, List<String> transactionIds){
         budgetEntities.forEach(budgetEntity -> {
-            budgetEntity.getLinkedTransactions().forEach(transaction ->{
-                boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
-                if (matches){
-                   List<LinkedTransactions> newLinked =  budgetEntity.getLinkedTransactions()
+            int mainChanged = 0;
+            for (LinkedTransactions transactions : budgetEntity.getLinkedTransactions()) {
+                boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transactions.getTransactionId()));
+                if (matches) {
+                    List<LinkedTransactions> newLinked = budgetEntity.getLinkedTransactions()
                             .stream()
-                            .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
+                            .filter(linkedTransactions -> !transactions.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
                             .collect(Collectors.toList());
-                   budgetEntity.setLinkedTransactions(newLinked);
+                    budgetEntity.setLinkedTransactions(newLinked);
+                    mainChanged++;
                 }
-            });
+            }
 
             int i = 0;
             for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
+                int changed = 0;
                 for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
                     boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
                     if (matches) {
@@ -197,9 +200,16 @@ public class BudgetServiceImpl implements IBudgetService {
                                 .collect(Collectors.toList());
                         subCat.setLinkedTransactions(newLinked);
                         budgetEntity.getSubCategory().set(i, subCat);
+                        changed ++;
                     }
                 }
                 i++;
+                if (changed !=0) {
+                    log.info("Removed {} transactions from budget {}", changed, subCat.getId());
+                }
+            }
+            if (mainChanged != 0 ) {
+                log.info("Removed {} transactions from budget {}", mainChanged, budgetEntity.getId());
             }
         });
     }

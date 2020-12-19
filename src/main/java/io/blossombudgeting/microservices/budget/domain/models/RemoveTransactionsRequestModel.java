@@ -1,14 +1,12 @@
 package io.blossombudgeting.microservices.budget.domain.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
