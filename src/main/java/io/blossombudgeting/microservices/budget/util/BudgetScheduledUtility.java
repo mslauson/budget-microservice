@@ -19,6 +19,7 @@ public class BudgetScheduledUtility {
 
     public void reCreateBudgets(){
         Set<BudgetEntity> budgetEntities = budgetRepository.findAllByMonthYear(String.valueOf(DateUtils.getFirstOfMonth()));
+        budgetRepository.saveAll(updateEntities(budgetEntities));
 
     }
 
