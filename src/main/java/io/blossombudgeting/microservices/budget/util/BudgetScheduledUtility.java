@@ -7,6 +7,7 @@ import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import io.blossombudgeting.util.budgetcommonutil.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public class BudgetScheduledUtility {
 
     private final BudgetRepository budgetRepository;
 
+    @Scheduled(cron = "${budget.recreate}")
     public void reCreateBudgets(){
         long start = System.currentTimeMillis();
         Set<BudgetEntity> budgetEntities = budgetRepository.findAllByMonthYear(String.valueOf(DateUtils.getFirstOfMonth()));

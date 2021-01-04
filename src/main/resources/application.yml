@@ -8,3 +8,6 @@ springdoc:
     path: /budgets/swagger-ui.html
   api-docs:
     path: /budgets/v3/api-docs
+budget:
+  recreate: "0 10 15 * * ?"
+#  recreate: "0 15 10 15 * ?"
