@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface BudgetRepository extends MongoRepository<BudgetEntity, String> {
@@ -19,6 +20,8 @@ public interface BudgetRepository extends MongoRepository<BudgetEntity, String> 
     List<BudgetEntity> findAllByPhoneAndMonthYear(String phone, String monthYear);
 
     List<BudgetEntity> findAllByCategory(String category);
+
+    Set<BudgetEntity> findAllByMonthYear(String monthYear);
 
     Long countAllByNameAndMonthYear(String name, String localDate);
 
