@@ -49,11 +49,11 @@ public class BudgetMapper {
                 .monthYear(encryptionUtility.encryptData(budgetEntity.getMonthYear().getBytes(StandardCharsets.UTF_8)).toString())
                 .name(encryptionUtility.encryptData(budgetEntity.getName().getBytes(StandardCharsets.UTF_8)).toString())
                 .category(encryptionUtility.encryptData(budgetEntity.getCategory().getBytes(StandardCharsets.UTF_8)).toString())
-                .subCategory(encryptionUtility.encryptData(budgetEntity.getSubCategory().to))
+                .subCategory(encryptSubCategory(budgetEntity.getSubCategory()))
                 .used(budgetEntity.getUsed())
                 .allocation(budgetEntity.getAllocation())
                 .visible(budgetEntity.isVisible())
-                .linkedTransactions(encryptionUtility.encryptData(budgetEntity.getLinkedTransactions().to))
+                .linkedTransactions(encryptLinkedTransactions(budgetEntity.getLinkedTransactions()))
                 .build();
     }
 
@@ -71,7 +71,8 @@ public class BudgetMapper {
         return entity;
     }
 
-    private void encryptSubCategory(SubCategoryDocument subCategoryDocument){
+    private List<SubCategoryDocument> encryptSubCategory(List<SubCategoryDocument> subCategoryDocuments){
+        subCategoryDocuments.forEach(subCategoryDocument -> {
         encryptLinkedTransactions(subCategoryDocument.getLinkedTransactions());
         subCategoryDocument.setCategory(
                 encryptionUtility.encryptData(subCategoryDocument.getCategory().getBytes(StandardCharsets.UTF_8)).toString()
@@ -82,14 +83,17 @@ public class BudgetMapper {
         subCategoryDocument.setId(
                 encryptionUtility.encryptData(subCategoryDocument.getId().getBytes(StandardCharsets.UTF_8)).toString()
         );
+        });
+        return subCategoryDocuments;
     }
 
-    private void encryptLinkedTransactions(List<LinkedTransactions> linkedTransactions){
+    private List<LinkedTransactions> encryptLinkedTransactions(List<LinkedTransactions> linkedTransactions){
         linkedTransactions.forEach(linkedTransaction -> {
             linkedTransaction.setTransactionId(
                     encryptionUtility.encryptData(linkedTransaction.getTransactionId().getBytes(StandardCharsets.UTF_8)).toString()
             );
         });
+        return linkedTransactions;
     }
 
 }
