@@ -10,6 +10,7 @@ import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
+import io.blossombudgeting.util.budgetcommonutil.encryption.BlossomEncryptionUtility;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
     private final BudgetMapper budgetMapper;
+    private final BlossomEncryptionUtility encryptionUtility;
 
     @Override
     public BudgetResponseModel saveBudget(BudgetBase request) {
@@ -108,7 +111,7 @@ public class BudgetServiceImpl implements IBudgetService {
                     "No budget found with given Id"
             );
         }
-        budgetRepo.deleteById(id);
+        budgetRepo.deleteById(encryptionUtility.decryptData(id.getBytes(StandardCharsets.UTF_8)).toString());
         return new GenericSuccessResponseModel(!budgetRepo.existsById(id));
     }
 
@@ -149,7 +152,7 @@ public class BudgetServiceImpl implements IBudgetService {
      */
     private BudgetEntity getBudgetEntityById(String budgetId){
        return budgetRepo
-                .findById(budgetId)
+                .findById(encryptionUtility.decryptData(budgetId.getBytes(StandardCharsets.UTF_8)).toString())
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
     }
 
