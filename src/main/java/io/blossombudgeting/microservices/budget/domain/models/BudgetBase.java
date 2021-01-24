@@ -40,11 +40,9 @@ public class BudgetBase {
     private String monthYear;
 
     @NotBlank
-    @Size(max = 50)
     private String name;
 
     @NotBlank
-    @Size(max = 50)
     private String category;
 
     private List<SubCategoryDocument> subCategory;
