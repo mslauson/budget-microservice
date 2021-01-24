@@ -2,6 +2,7 @@ package io.blossombudgeting.microservices.budget.util;
 
 
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.util.budgetcommonutil.encryption.BlossomEncryptionUtility;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import io.blossombudgeting.util.budgetcommonutil.util.StringUtils;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class BudgetScheduledUtility {
 
     private final BudgetRepository budgetRepository;
+    private final BlossomEncryptionUtility encryptionUtility;
 
     @Scheduled(cron = "${budget.recreate}")
     public void reCreateBudgets(){
@@ -39,10 +41,11 @@ public class BudgetScheduledUtility {
         String newMonthYear = String.valueOf(DateUtils.getFirstOfMonth().plusMonths(1));
         budgetEntities.forEach(budgetEntity -> {
             String category = budgetEntity.getCategory();
+            String decryptedCat = encryptionUtility.decrypt(category);
             nextMonthEntities.add(
             BudgetEntity
                     .builder()
-                    .id(StringUtils.buildStringBuffer(category, newMonthYear, budgetEntity.getPhone()))
+                    .id(encryptionUtility.encrypt(StringUtils.buildStringBuffer(decryptedCat, newMonthYear, budgetEntity.getPhone())))
                     .name(category)
                     .category(category)
                     .allocation(budgetEntity.getAllocation())

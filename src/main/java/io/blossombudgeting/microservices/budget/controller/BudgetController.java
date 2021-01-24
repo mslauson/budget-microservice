@@ -50,13 +50,13 @@ public class BudgetController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@PathVariable @Size(max = 50) String category) {
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@PathVariable String category) {
         log.info("getAllBudgetsByCategoryV1: category=[{}]", category);
         return ResponseEntity.ok(budgetService.getAllBudgetsByCategory(category.toUpperCase()));
     }
 
     @GetMapping("/subCategory/{subCategory}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable @Size(max = 50) String subCategory) {
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable String subCategory) {
         log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
         return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
     }

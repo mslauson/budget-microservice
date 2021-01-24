@@ -1,6 +1,7 @@
 package io.blossombudgeting.microservices.budget.util;
 
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.util.budgetcommonutil.encryption.BlossomEncryptionUtility;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.util.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,8 @@ class BudgetScheduledUtilityTest {
     BudgetRepository budgetRepository;
     @Mock
     Logger log;
+    @Mock
+    private BlossomEncryptionUtility encryptionUtility;
     @InjectMocks
     BudgetScheduledUtility budgetScheduledUtility;
 
@@ -32,6 +35,8 @@ class BudgetScheduledUtilityTest {
 
     @Test
     void testReCreateBudgets() {
+        when(encryptionUtility.decrypt(anyString())).thenReturn("abc");
+        when(encryptionUtility.encrypt(anyString())).thenReturn("abc");
         when(budgetRepository.findAllByMonthYear(anyString())).thenReturn(new HashSet<BudgetEntity>(List.of(BudgetEntity
                 .builder()
                 .id("test")
