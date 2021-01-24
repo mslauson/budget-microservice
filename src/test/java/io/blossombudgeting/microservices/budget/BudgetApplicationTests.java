@@ -114,17 +114,6 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void testAddBudgetLongName() throws Exception {
-        budgetBase.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for name does not have a valid length"));
-    }
-
-    @Test
     void testAddBudgetNoCategory() throws Exception {
         budgetBase.setCategory(null);
         mockMvc.perform(post("/budgets/api/v1")
@@ -133,17 +122,6 @@ public class BudgetApplicationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param category is missing."));
-    }
-
-    @Test
-    void testAddBudgetLongCategory() throws Exception {
-        budgetBase.setCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
     }
 
     @Test
@@ -284,17 +262,6 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void testUpdateBudgetLongName() throws Exception {
-        budgetBase.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(put("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for name does not have a valid length"));
-    }
-
-    @Test
     void testUpdateBudgetNoCategory() throws Exception {
         budgetBase.setCategory(null);
         mockMvc.perform(put("/budgets/api/v1")
@@ -303,17 +270,6 @@ public class BudgetApplicationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param category is missing."));
-    }
-
-    @Test
-    void testUpdateBudgetLongCategory() throws Exception {
-        budgetBase.setCategory("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
-        mockMvc.perform(put("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Value passed for category does not have a valid length"));
     }
 
     @Test
