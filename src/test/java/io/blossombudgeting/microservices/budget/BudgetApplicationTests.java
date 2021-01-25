@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
@@ -148,7 +148,8 @@ public class BudgetApplicationTests {
 
     @Test
     void CTestGetBudgetById() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/" + getBudgetId())
+        mockMvc.perform(get("/budgets/api/v1/id")
+                .param("id", getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -156,7 +157,8 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByIdNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/asdlkfj")
+        mockMvc.perform(get("/budgets/api/v1/id")
+                .param("id", "asdlkfj")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -165,7 +167,8 @@ public class BudgetApplicationTests {
 
     @Test
     void DTestGetBudgetByEmail() throws Exception {
-        MvcResult result = mockMvc.perform(get("/budgets/api/v1/phone/12345678901")
+        MvcResult result = mockMvc.perform(get("/budgets/api/v1/phone")
+                .param("phone", "12345678901")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -176,7 +179,8 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByEmailNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/phone/0000000000")
+        mockMvc.perform(get("/budgets/api/v1/phone")
+                .param("phone", "0000000000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -185,7 +189,9 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/12345678901/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/phone/monthYear")
+                .param("phone", "12345678901")
+                .param("monthYear", "2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -194,7 +200,9 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByDateBadEmail() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/phonephone.com/month/2000-04-01")
+        mockMvc.perform(get("/budgets/api/v1/phone/monthYear")
+                .param("phone", "asdfjklsdf")
+                .param("monthYear", "2000-04-01")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -203,7 +211,8 @@ public class BudgetApplicationTests {
 
     @Test
     void testGetBudgetByCategoryNotFound() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/category/catesdfgory")
+        mockMvc.perform(get("/budgets/api/v1/category")
+                .param("category", "CATESDFGORY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -212,7 +221,8 @@ public class BudgetApplicationTests {
 
     @Test
     void GTestGetBudgetBySubCategory() throws Exception {
-        mockMvc.perform(get("/budgets/api/v1/subCategory/subCategory")
+        mockMvc.perform(get("/budgets/api/v1/subCategory")
+                .param("subCategory", "12345678901")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -316,7 +326,8 @@ public class BudgetApplicationTests {
 
     @Test
     void JTestDeleteBudgetById() throws Exception {
-        mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
+        mockMvc.perform(delete("/budgets/api/v1/id")
+                .param("id", getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -324,7 +335,8 @@ public class BudgetApplicationTests {
 
     @Test
     void testDeleteBudgetById() throws Exception {
-        mockMvc.perform(delete("/budgets/api/v1/" + getBudgetId())
+        mockMvc.perform(delete("/budgets/api/v1/id")
+                .param("id", getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
