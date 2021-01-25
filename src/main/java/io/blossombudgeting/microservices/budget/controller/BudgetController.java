@@ -37,13 +37,13 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getBudgetById(id));
     }
 
-    @GetMapping("/phone/phone")
+    @GetMapping("/phone")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByPhoneV1(@RequestParam String phone) {
         log.info("getAllBudgetsByPhoneV1: phone=[{}]", phone);
         return ResponseEntity.ok(budgetService.getAllBudgetsByPhone(phone));
     }
 
-    @GetMapping("/phone/month/monthYear")
+    @GetMapping("/phone/monthYear")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@NotBlank @RequestParam("phone") String phone,
                                                                              @NotBlank @RequestParam("monthYear") String monthYear) {
         GetBudgetsByMonthRequestModel requestModel = new GetBudgetsByMonthRequestModel(phone, monthYear);
@@ -51,13 +51,13 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));
     }
 
-    @GetMapping("/category/category")
+    @GetMapping("/category")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@RequestParam String category) {
         log.info("getAllBudgetsByCategoryV1: category=[{}]", category);
         return ResponseEntity.ok(budgetService.getAllBudgetsByCategory(category.toUpperCase()));
     }
 
-    @GetMapping("/subCategory/subCategory")
+    @GetMapping("/subCategory")
     public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@RequestParam String subCategory) {
         log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
         return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
