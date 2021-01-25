@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 @Slf4j
 @RestController
@@ -31,32 +31,34 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.saveBudget(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BudgetResponseModel> getBudgetByIdV1(@PathVariable String id) {
+    @GetMapping("/id")
+    public ResponseEntity<BudgetResponseModel> getBudgetByIdV1(@RequestParam String id) {
         log.info("getBudgetByIdV1: id=[{}]", id);
         return ResponseEntity.ok(budgetService.getBudgetById(id));
     }
 
-    @GetMapping("/phone/{phone}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByPhoneV1(@PathVariable String phone) {
+    @GetMapping("/phone/phone")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByPhoneV1(@RequestParam String phone) {
         log.info("getAllBudgetsByPhoneV1: phone=[{}]", phone);
         return ResponseEntity.ok(budgetService.getAllBudgetsByPhone(phone));
     }
 
-    @GetMapping("/{phone}/month/{monthYear}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@Valid GetBudgetsByMonthRequestModel requestModel) {
+    @GetMapping("/phone/month/monthYear")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByYearAndMonthV1(@NotBlank @RequestParam("phone") String phone,
+                                                                             @NotBlank @RequestParam("monthYear") String monthYear) {
+        GetBudgetsByMonthRequestModel requestModel = new GetBudgetsByMonthRequestModel(phone, monthYear);
         log.info("getAllBudgetsByYearAndMonthV1: request=[{}]", requestModel);
         return ResponseEntity.ok(budgetService.getAllBudgetsByYearAndMonth(requestModel));
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@PathVariable String category) {
+    @GetMapping("/category/category")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsByCategoryV1(@RequestParam String category) {
         log.info("getAllBudgetsByCategoryV1: category=[{}]", category);
         return ResponseEntity.ok(budgetService.getAllBudgetsByCategory(category.toUpperCase()));
     }
 
-    @GetMapping("/subCategory/{subCategory}")
-    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@PathVariable String subCategory) {
+    @GetMapping("/subCategory/subCategory")
+    public ResponseEntity<BudgetResponseModel> getAllBudgetsBySubCategoryV1(@RequestParam String subCategory) {
         log.info("getAllBudgetsBySubCategoryV1: type=[{}]", subCategory);
         return ResponseEntity.ok(budgetService.getAllBudgetsBySubCategory(subCategory.toUpperCase()));
     }
@@ -73,8 +75,8 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.removeTransactionsWhenAccountDeleted(requestModel));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@PathVariable String id) {
+    @DeleteMapping("/id")
+    public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@RequestParam String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);
         return ResponseEntity.ok(budgetService.deleteBudgetById(id));
     }
