@@ -6,6 +6,7 @@
 package io.blossombudgeting.microservices.budget.util;
 
 import io.blossombudgeting.microservices.budget.domain.entity.CategoryEntity;
+import io.blossombudgeting.microservices.budget.domain.entity.CustomerCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
 import io.blossombudgeting.microservices.budget.domain.models.CategoriesModel;
@@ -112,6 +113,14 @@ public class BudgetMapper {
                 .builder()
                 .categories(categories)
                 .id(categoriesEntity.getId())
+                .build();
+    }
+
+    public CustomerCategoriesEntity defaultToCustomer(DefaultCategoriesEntity defaultEntity, String phone) {
+        return CustomerCategoriesEntity
+                .builder()
+                .phone(phone)
+                .categories(defaultEntity.getCategories())
                 .build();
     }
 
