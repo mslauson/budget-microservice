@@ -3,25 +3,22 @@
  * All Rights Reserved
  */
 
-package io.blossombudgeting.microservices.budget.domain.entity;
+package io.blossombudgeting.microservices.budget.domain.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@Document("default-categories")
-public class DefaultCategoriesEntity {
+public class Category {
 
     @Id
     private String id;
-    private List<CategoryEntity> categories;
+    private String category;
+    private String icon;
 }
