@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
+import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.microservices.budget.repository.DefaultCategoriesRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
+    private final DefaultCategoriesRepository categoriesRepository;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -121,6 +124,16 @@ public class BudgetServiceImpl implements IBudgetService {
         budgetRepo.saveAll(budgetEntities);
         log.info("removeTransactionsWhenAccountDeleted execution time -> {}ms", System.currentTimeMillis() - start);
         return new GenericSuccessResponseModel(true);
+    }
+
+    @Override
+    public CategoriesModel refreshCategories(CategoriesModel requestModel) {
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = budgetMapper.categoriesRequestToEntity(requestModel);
+        categoriesEntity = categoriesRepository.save(categoriesEntity);
+        CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
+        log.info("refreshCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
     }
 
     /**

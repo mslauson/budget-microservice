@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
@@ -27,5 +27,7 @@ public interface IBudgetService {
     GenericSuccessResponseModel deleteBudgetById(String id);
 
     GenericSuccessResponseModel removeTransactionsWhenAccountDeleted(RemoveTransactionsRequestModel requestModel);
+
+    CategoriesModel refreshCategories(CategoriesModel requestModel);
 
 }
