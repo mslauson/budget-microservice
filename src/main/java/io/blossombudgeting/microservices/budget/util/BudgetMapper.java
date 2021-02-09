@@ -89,7 +89,7 @@ public class BudgetMapper {
         return DefaultCategoriesEntity
                 .builder()
                 .categories(categoryEntityList)
-                .id("default")
+                .id(requestModel.getId() == null ? "default" : requestModel.getId())
                 .build();
     }
 
