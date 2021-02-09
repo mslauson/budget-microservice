@@ -82,6 +82,7 @@ public class BudgetMapper {
                             .id(encryptionUtility.encrypt(category.getCategory()))
                             .category(encryptionUtility.encrypt(category.getCategory()))
                             .icon(encryptionUtility.encrypt(category.getIcon()))
+                            .enabled(category.isEnabled())
                             .build()
             );
         });
@@ -102,6 +103,7 @@ public class BudgetMapper {
                             .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
                             .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
                             .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
+                            .enabled(categoryEntity.isEnabled())
                             .build()
             );
         });
