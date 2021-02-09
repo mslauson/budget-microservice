@@ -20,4 +20,5 @@ public class Category {
     @Id
     private String id;
     private String category;
+    private String icon;
 }
