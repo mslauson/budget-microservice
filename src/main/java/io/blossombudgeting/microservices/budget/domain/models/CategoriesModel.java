@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoriesModel {
 
-    @Id
     private String id;
+    @NotNull
     private List<Category> categories;
 }

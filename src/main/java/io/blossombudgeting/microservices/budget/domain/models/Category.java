@@ -9,7 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -17,8 +18,10 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class Category {
 
-    @Id
+    @NotBlank
     private String id;
+    @NotBlank
     private String category;
+    @NotBlank
     private String icon;
 }
