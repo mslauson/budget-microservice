@@ -30,4 +30,6 @@ public interface IBudgetService {
 
     CategoriesModel refreshCategories(CategoriesModel requestModel);
 
+    CategoriesModel retrieveCategories(String id);
+
 }

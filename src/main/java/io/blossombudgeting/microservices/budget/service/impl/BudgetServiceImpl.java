@@ -16,6 +16,7 @@ import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
+import io.blossombudgeting.util.budgetcommonutil.exception.GenericNotFoundException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -133,6 +134,17 @@ public class BudgetServiceImpl implements IBudgetService {
         categoriesEntity = categoriesRepository.save(categoriesEntity);
         CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
         log.info("refreshCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public CategoriesModel retrieveCategories(String id) {
+        log.info("Querying with id -> {}", id);
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = categoriesRepository.findById(id)
+                .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
+        CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
+        log.info("retrieveCategories execution time -> {}ms", System.currentTimeMillis() - start);
         return response;
     }
 
