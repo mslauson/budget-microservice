@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class CategoriesModel {
 
     private String id;
+    @Valid
     @NotNull
     private List<Category> categories;
 }

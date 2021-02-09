@@ -7,9 +7,7 @@ package io.blossombudgeting.microservices.budget;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossombudgeting.microservices.budget.domain.models.RemoveTransactionsRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -46,6 +44,9 @@ public class BudgetApplicationTests {
     private final ObjectMapper om = new ObjectMapper();
     private BudgetBase budgetBase;
     private RemoveTransactionsRequestModel removeTransactionsRequestModel;
+    private Category category;
+    private CategoriesModel categoriesModel;
+
 
     @BeforeEach
     void setUp() {
@@ -55,6 +56,8 @@ public class BudgetApplicationTests {
         removeTransactionsRequestModel = new RemoveTransactionsRequestModel();
         removeTransactionsRequestModel.setPhone("12345678901");
         removeTransactionsRequestModel.setTransactionIds(List.of("id"));
+        category = new Category("testing", "testing", "testing");
+        categoriesModel = new CategoriesModel("testing", List.of(category));
     }
 
     @Test
@@ -341,6 +344,67 @@ public class BudgetApplicationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
+    }
+
+    @Test
+    void KTestRefreshCategories() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategoryId() throws Exception {
+        categoriesModel.getCategories().get(0).setId("");
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].id is missing."));
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategory() throws Exception {
+        categoriesModel.getCategories().get(0).setCategory("");
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].category is missing."));
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategoryList() throws Exception {
+        categoriesModel.setCategories(null);
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories is missing."));
+    }
+
+    @Test
+    void LTestGetCategories() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/default")
+                .param("id", "testing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetCategoriesNotFound() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/default")
+                .param("id", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No default categories exist for id fake"));
     }
 
     @Test
