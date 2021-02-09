@@ -96,22 +96,9 @@ public class BudgetMapper {
     }
 
     public CategoriesModel defaultCategoriesEntityToResponse(DefaultCategoriesEntity categoriesEntity) {
-        List<Category> categories = new ArrayList<>();
-        categoriesEntity.getCategories().forEach(categoryEntity -> {
-            categories.add(
-                    Category
-                            .builder()
-                            .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
-                            .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
-                            .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
-                            .enabled(categoryEntity.isEnabled())
-                            .build()
-            );
-        });
-
         return CategoriesModel
                 .builder()
-                .categories(categories)
+                .categories(categoriesToResponse(categoriesEntity.getCategories()))
                 .id(categoriesEntity.getId())
                 .build();
     }
@@ -124,4 +111,29 @@ public class BudgetMapper {
                 .build();
     }
 
+    public CategoriesModel customerCategoriesEntityToResponse(CustomerCategoriesEntity customerCategoriesEntity) {
+
+        return CategoriesModel
+                .builder()
+                .categories(categoriesToResponse(customerCategoriesEntity.getCategories()))
+                .id(customerCategoriesEntity.getId())
+                .build();
+    }
+
+    private List<Category> categoriesToResponse(List<CategoryEntity> categoryEntityList) {
+        List<Category> categories = new ArrayList<>();
+        categoryEntityList.forEach(categoryEntity -> {
+            categories.add(
+                    Category
+                            .builder()
+                            .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
+                            .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
+                            .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
+                            .enabled(categoryEntity.isEnabled())
+                            .build()
+            );
+        });
+
+        return categories;
+    }
 }
