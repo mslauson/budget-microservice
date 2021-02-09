@@ -75,6 +75,18 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.removeTransactionsWhenAccountDeleted(requestModel));
     }
 
+    @PutMapping("/categories/default")
+    public ResponseEntity<CategoriesModel> updateDefaultCategoriesV1(@Valid @RequestBody CategoriesModel requestModel) {
+        log.info("updateDefaultCategoriesV1: request=[{}]", requestModel.toString());
+        return ResponseEntity.ok(budgetService.refreshCategories(requestModel));
+    }
+
+    @GetMapping("/categories/default")
+    public ResponseEntity<CategoriesModel> getDefaultCategoriesV1(@NotBlank @RequestParam("id") String id) {
+        log.info("getDefaultCategoriesV1: id=[{}]", id);
+        return ResponseEntity.ok(budgetService.retrieveCategories(id));
+    }
+
     @DeleteMapping("/id")
     public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@RequestParam String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);
