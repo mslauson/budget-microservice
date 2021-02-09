@@ -22,6 +22,5 @@ public class Category {
     private String id;
     @NotBlank
     private String category;
-    @NotBlank
     private String icon;
 }
