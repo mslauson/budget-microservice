@@ -5,7 +5,6 @@
 
 package io.blossombudgeting.microservices.budget.domain.models;
 
-import io.blossombudgeting.microservices.budget.domain.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +21,5 @@ public class CategoriesModel {
 
     @Id
     private String id;
-    private List<CategoryEntity> categories;
+    private List<Category> categories;
 }

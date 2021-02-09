@@ -1,20 +1,32 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
 package io.blossombudgeting.microservices.budget.util;
 
+import io.blossombudgeting.microservices.budget.domain.entity.CategoryEntity;
+import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
+import io.blossombudgeting.microservices.budget.domain.models.CategoriesModel;
+import io.blossombudgeting.microservices.budget.domain.models.Category;
 import io.blossombudgeting.microservices.budget.domain.models.UpdateBudgetRequestModel;
+import io.blossombudgeting.util.budgetcommonutil.encryption.BlossomEncryptionUtility;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BudgetMapper {
+
+    private final BlossomEncryptionUtility encryptionUtility;
 
     public BudgetEntity covertToEntity(BudgetBase request) {
         return BudgetEntity.builder()
@@ -59,6 +71,46 @@ public class BudgetMapper {
         entity.setLinkedTransactions(request.getLinkedTransactions());
 
         return entity;
+    }
+
+    public DefaultCategoriesEntity categoriesRequestToEntity(CategoriesModel requestModel) {
+        List<CategoryEntity> categoryEntityList = new ArrayList<>();
+        requestModel.getCategories().forEach(category -> {
+            categoryEntityList.add(
+                    CategoryEntity
+                            .builder()
+                            .id(encryptionUtility.encrypt(category.getCategory()))
+                            .category(encryptionUtility.encrypt(category.getCategory()))
+                            .icon(encryptionUtility.encrypt(category.getIcon()))
+                            .build()
+            );
+        });
+
+        return DefaultCategoriesEntity
+                .builder()
+                .categories(categoryEntityList)
+                .id("default")
+                .build();
+    }
+
+    public CategoriesModel defaultCategoriesEntityToResponse(DefaultCategoriesEntity categoriesEntity) {
+        List<Category> categories = new ArrayList<>();
+        categoriesEntity.getCategories().forEach(categoryEntity -> {
+            categories.add(
+                    Category
+                            .builder()
+                            .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
+                            .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
+                            .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
+                            .build()
+            );
+        });
+
+        return CategoriesModel
+                .builder()
+                .categories(categories)
+                .id(categoriesEntity.getId())
+                .build();
     }
 
 }
