@@ -32,4 +32,6 @@ public interface IBudgetService {
 
     CategoriesModel retrieveCategories(String id);
 
+    CategoriesModel initializeCustomerCategories(String phone, String id);
+
 }

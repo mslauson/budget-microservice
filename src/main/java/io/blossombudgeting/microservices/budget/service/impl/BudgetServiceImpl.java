@@ -5,10 +5,12 @@
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
+import io.blossombudgeting.microservices.budget.domain.entity.CustomerCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.microservices.budget.repository.CustomerCategoriesRepository;
 import io.blossombudgeting.microservices.budget.repository.DefaultCategoriesRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
@@ -34,7 +36,8 @@ import java.util.stream.Collectors;
 public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
-    private final DefaultCategoriesRepository categoriesRepository;
+    private final DefaultCategoriesRepository defaultCategoriesRepository;
+    private final CustomerCategoriesRepository customerCategoriesRepository;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -131,7 +134,7 @@ public class BudgetServiceImpl implements IBudgetService {
     public CategoriesModel refreshCategories(CategoriesModel requestModel) {
         long start = System.currentTimeMillis();
         DefaultCategoriesEntity categoriesEntity = budgetMapper.categoriesRequestToEntity(requestModel);
-        categoriesEntity = categoriesRepository.save(categoriesEntity);
+        categoriesEntity = defaultCategoriesRepository.save(categoriesEntity);
         CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
         log.info("refreshCategories execution time -> {}ms", System.currentTimeMillis() - start);
         return response;
@@ -141,10 +144,23 @@ public class BudgetServiceImpl implements IBudgetService {
     public CategoriesModel retrieveCategories(String id) {
         log.info("Querying with id -> {}", id);
         long start = System.currentTimeMillis();
-        DefaultCategoriesEntity categoriesEntity = categoriesRepository.findById(id)
+        DefaultCategoriesEntity categoriesEntity = defaultCategoriesRepository.findById(id)
                 .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
         CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
         log.info("retrieveCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public CategoriesModel initializeCustomerCategories(String phone, String id) {
+        log.info("initializing for user -> {}", phone);
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = defaultCategoriesRepository.findById(id)
+                .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
+        CustomerCategoriesEntity customerCategoriesEntity = budgetMapper.defaultToCustomer(categoriesEntity, phone);
+        customerCategoriesEntity = customerCategoriesRepository.save(budgetMapper.defaultToCustomer(categoriesEntity, phone));
+        CategoriesModel response = budgetMapper.customerCategoriesEntityToResponse(customerCategoriesEntity);
+        log.info("initializeCustomerCategories execution time -> {}ms", System.currentTimeMillis() - start);
         return response;
     }
 
