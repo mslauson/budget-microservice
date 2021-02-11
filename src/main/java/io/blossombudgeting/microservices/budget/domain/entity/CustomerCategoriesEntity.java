@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-@Document("default-categories")
+@Document("customer-default-categories")
 public class CustomerCategoriesEntity {
 
     @Id
