@@ -127,9 +127,9 @@ public class BudgetMapper {
             categories.add(
                     Category
                             .builder()
-                            .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
-                            .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
-                            .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
+                            .id(categoryEntity.getCategory())
+                            .category(categoryEntity.getCategory())
+                            .icon(categoryEntity.getIcon())
                             .enabled(categoryEntity.getEnabled())
                             .build()
             );
