@@ -56,8 +56,8 @@ public class BudgetApplicationTests {
         removeTransactionsRequestModel = new RemoveTransactionsRequestModel();
         removeTransactionsRequestModel.setPhone("12345678901");
         removeTransactionsRequestModel.setTransactionIds(List.of("id"));
-        category = new Category("testing", "testing", "testing");
-        categoriesModel = new CategoriesModel("testing", List.of(category));
+        category = new Category("testing", "testing", "testing", true);
+        categoriesModel = new CategoriesModel("testing", "phone", List.of(category));
     }
 
     @Test
@@ -405,6 +405,76 @@ public class BudgetApplicationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No default categories exist for id fake"));
+    }
+
+    @Test
+    void MTestInitializeCustomer() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .param("id", "testing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testInitializeCustomerNotFound() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .param("id", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No default categories exist for id fake"));
+    }
+
+    @Test
+    void testInitializeCustomerNoId() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param id is missing."));
+    }
+
+    @Test
+    void testInitializeCustomerNoPhone() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("id", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
+    }
+
+
+    @Test
+    void NTestGetCustomerCategories() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .param("phone", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetCustomerCategoriesNotFound() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .param("phone", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No customer categories exist for user fake"));
+    }
+
+    @Test
+    void testGetCustomerCategoriesNoPhone() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
     }
 
     @Test
