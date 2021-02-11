@@ -98,7 +98,7 @@ public class BudgetMapper {
     public CategoriesModel defaultCategoriesEntityToResponse(DefaultCategoriesEntity categoriesEntity) {
         return CategoriesModel
                 .builder()
-                .categories(categoriesToResponse(categoriesEntity.getCategories()))
+                .categories(categoriesToResponseDecrypted(categoriesEntity.getCategories()))
                 .id(categoriesEntity.getId())
                 .build();
     }
@@ -127,9 +127,26 @@ public class BudgetMapper {
             categories.add(
                     Category
                             .builder()
-                            .id(categoryEntity.getCategory())
+                            .id(categoryEntity.getId())
                             .category(categoryEntity.getCategory())
                             .icon(categoryEntity.getIcon())
+                            .enabled(categoryEntity.getEnabled())
+                            .build()
+            );
+        });
+
+        return categories;
+    }
+
+    private List<Category> categoriesToResponseDecrypted(List<CategoryEntity> categoryEntityList) {
+        List<Category> categories = new ArrayList<>();
+        categoryEntityList.forEach(categoryEntity -> {
+            categories.add(
+                    Category
+                            .builder()
+                            .id(encryptionUtility.decrypt(categoryEntity.getId()))
+                            .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
+                            .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
                             .enabled(categoryEntity.getEnabled())
                             .build()
             );
