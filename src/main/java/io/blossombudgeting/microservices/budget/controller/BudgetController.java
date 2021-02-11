@@ -87,7 +87,7 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.retrieveCategories(id));
     }
 
-    @GetMapping("/categories/customer/initialize")
+    @PutMapping("/categories/customer/initialize")
     public ResponseEntity<CategoriesModel> initializeCustomerCategoriesV1(@NotBlank @RequestParam("phone") String phone,
                                                                           @NotBlank @RequestParam("id") String id) {
         log.info("initializeCustomerCategoriesV1: phone=[{}] id=[{}]", phone, id);
