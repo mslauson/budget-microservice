@@ -80,7 +80,7 @@ public class BudgetMapper {
             categoryEntityList.add(
                     CategoryEntity
                             .builder()
-                            .id(encryptionUtility.encrypt(category.getCategory()))
+                            .id(encryptionUtility.encrypt(category.getId()))
                             .category(encryptionUtility.encrypt(category.getCategory()))
                             .icon(encryptionUtility.encrypt(category.getIcon()))
                             .enabled(category.getEnabled())
