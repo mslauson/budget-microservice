@@ -94,6 +94,12 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.initializeCustomerCategories(phone, id));
     }
 
+    @GetMapping("/categories/customer")
+    public ResponseEntity<CategoriesModel> getCustomerCategoriesV1(@NotBlank @RequestParam("phone") String phone) {
+        log.info("getCustomerCategoriesV1: phone=[{}]", phone);
+        return ResponseEntity.ok(budgetService.retrieveCustomerCategories(phone));
+    }
+
     @DeleteMapping("/id")
     public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@RequestParam String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);
