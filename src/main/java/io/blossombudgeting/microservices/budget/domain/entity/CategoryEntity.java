@@ -21,5 +21,5 @@ public class CategoryEntity {
     private String id;
     private String category;
     private String icon;
-    private boolean enabled;
+    private Boolean enabled;
 }
