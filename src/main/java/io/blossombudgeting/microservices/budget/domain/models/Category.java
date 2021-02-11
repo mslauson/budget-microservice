@@ -23,5 +23,5 @@ public class Category {
     @NotBlank
     private String category;
     private String icon;
-    private boolean enabled;
+    private Boolean enabled;
 }

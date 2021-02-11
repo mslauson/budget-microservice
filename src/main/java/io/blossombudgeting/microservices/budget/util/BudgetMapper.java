@@ -83,7 +83,7 @@ public class BudgetMapper {
                             .id(encryptionUtility.encrypt(category.getCategory()))
                             .category(encryptionUtility.encrypt(category.getCategory()))
                             .icon(encryptionUtility.encrypt(category.getIcon()))
-                            .enabled(category.isEnabled())
+                            .enabled(category.getEnabled())
                             .build()
             );
         });
@@ -117,6 +117,7 @@ public class BudgetMapper {
                 .builder()
                 .categories(categoriesToResponse(customerCategoriesEntity.getCategories()))
                 .id(customerCategoriesEntity.getId())
+                .phone(customerCategoriesEntity.getPhone())
                 .build();
     }
 
@@ -129,7 +130,7 @@ public class BudgetMapper {
                             .id(encryptionUtility.decrypt(categoryEntity.getCategory()))
                             .category(encryptionUtility.decrypt(categoryEntity.getCategory()))
                             .icon(encryptionUtility.decrypt(categoryEntity.getIcon()))
-                            .enabled(categoryEntity.isEnabled())
+                            .enabled(categoryEntity.getEnabled())
                             .build()
             );
         });
