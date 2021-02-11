@@ -22,7 +22,6 @@ import java.util.List;
 public class CustomerCategoriesEntity {
 
     @Id
-    private String id;
     private String phone;
     private List<CategoryEntity> categories;
 }

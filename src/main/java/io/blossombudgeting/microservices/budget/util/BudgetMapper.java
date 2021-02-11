@@ -116,7 +116,6 @@ public class BudgetMapper {
         return CategoriesModel
                 .builder()
                 .categories(categoriesToResponse(customerCategoriesEntity.getCategories()))
-                .id(customerCategoriesEntity.getId())
                 .phone(customerCategoriesEntity.getPhone())
                 .build();
     }
