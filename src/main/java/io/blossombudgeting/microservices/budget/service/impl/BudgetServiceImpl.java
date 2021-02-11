@@ -164,6 +164,17 @@ public class BudgetServiceImpl implements IBudgetService {
         return response;
     }
 
+    @Override
+    public CategoriesModel retrieveCustomerCategories(String phone) {
+        log.info("initializing for user -> {}", phone);
+        long start = System.currentTimeMillis();
+        CustomerCategoriesEntity customerCategoriesEntity = customerCategoriesRepository.findByPhone(phone)
+                .orElseThrow(() -> new GenericNotFoundException("No customer categories exist for user " + phone));
+        CategoriesModel response = budgetMapper.customerCategoriesEntityToResponse(customerCategoriesEntity);
+        log.info("retrieveCustomerCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
     /**
      * Checks to see if budget is duplicate
      *
