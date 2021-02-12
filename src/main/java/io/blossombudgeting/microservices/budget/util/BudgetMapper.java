@@ -156,17 +156,17 @@ public class BudgetMapper {
         return categories;
     }
 
-    private List<BudgetEntity> createDefaultBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
+    public List<BudgetEntity> createDefaultBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
         LocalDate currentMonth = LocalDate.now().withDayOfMonth(1);
         List<BudgetEntity> budgetEntities = new ArrayList<>();
         customerCategoriesEntity.getCategories().forEach(categoryEntity -> {
-                    budgetEntities.add(
-                            BudgetEntity.builder()
-                                    .id(StringUtils.buildStringBuffer(categoryEntity.getCategory(), currentMonth.toString(), phone))
-                                    .phone(phone)
-                                    .dateCreated(DateUtils.utcTimeStamp())
-                                    .name(categoryEntity.getCategory())
-                                    .category(categoryEntity.getCategory())
+            budgetEntities.add(
+                    BudgetEntity.builder()
+                            .id(StringUtils.buildStringBuffer(categoryEntity.getCategory(), currentMonth.toString(), phone))
+                            .phone(phone)
+                            .dateCreated(DateUtils.utcTimeStamp())
+                            .name(categoryEntity.getCategory())
+                            .category(categoryEntity.getCategory())
                                     .subCategory(new ArrayList<>())
                                     .used(0D)
                                     .allocation(0D)

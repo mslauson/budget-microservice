@@ -159,6 +159,7 @@ public class BudgetServiceImpl implements IBudgetService {
                 .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
         CustomerCategoriesEntity customerCategoriesEntity = budgetMapper.defaultToCustomer(categoriesEntity, phone);
         customerCategoriesEntity = customerCategoriesRepository.save(customerCategoriesEntity);
+        initializeCustomerBudgets(customerCategoriesEntity, phone);
         CategoriesModel response = budgetMapper.customerCategoriesEntityToResponse(customerCategoriesEntity);
         log.info("initializeCustomerCategories execution time -> {}ms", System.currentTimeMillis() - start);
         return response;
@@ -290,6 +291,11 @@ public class BudgetServiceImpl implements IBudgetService {
             }
             budgetEntity.setUsed(newUsed);
         });
+    }
+
+    private void initializeCustomerBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
+        List<BudgetEntity> budgetEntities = budgetMapper.createDefaultBudgets(customerCategoriesEntity, phone);
+        budgetRepo.saveAll(budgetEntities);
     }
 
 }
