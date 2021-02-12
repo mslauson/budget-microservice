@@ -159,10 +159,11 @@ public class BudgetMapper {
     public List<BudgetEntity> createDefaultBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
         LocalDate currentMonth = LocalDate.now().withDayOfMonth(1);
         List<BudgetEntity> budgetEntities = new ArrayList<>();
+        String decryptedPhone = encryptionUtility.decrypt(phone);
         customerCategoriesEntity.getCategories().forEach(categoryEntity -> {
             budgetEntities.add(
                     BudgetEntity.builder()
-                            .id(StringUtils.buildStringBuffer(categoryEntity.getCategory(), currentMonth.toString(), phone))
+                            .id(encryptionUtility.encrypt(StringUtils.buildStringBuffer(categoryEntity.getCategory(), currentMonth.toString(), decryptedPhone)))
                             .phone(phone)
                             .dateCreated(DateUtils.utcTimeStamp())
                             .name(categoryEntity.getCategory())
