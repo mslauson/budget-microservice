@@ -94,6 +94,12 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.initializeCustomerCategories(phone, id));
     }
 
+    @PutMapping("/change")
+    public ResponseEntity<GenericSuccessResponseModel> changeCustomerBudgetV1(@Valid @RequestBody ChangeBudgetRequestModel requestModel) {
+        log.info("changeCustomerBudgetV1: request=[{}]", requestModel.toString());
+        return ResponseEntity.ok(budgetService.changeBudgetForTransaction(requestModel));
+    }
+
     @GetMapping("/categories/customer")
     public ResponseEntity<CategoriesModel> getCustomerCategoriesV1(@NotBlank @RequestParam("phone") String phone) {
         log.info("getCustomerCategoriesV1: phone=[{}]", phone);
