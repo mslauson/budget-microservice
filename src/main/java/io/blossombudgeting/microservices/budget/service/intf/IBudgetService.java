@@ -36,4 +36,6 @@ public interface IBudgetService {
 
     CategoriesModel retrieveCustomerCategories(String phone);
 
+    GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel);
+
 }

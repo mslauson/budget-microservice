@@ -176,6 +176,11 @@ public class BudgetServiceImpl implements IBudgetService {
         return response;
     }
 
+    @Override
+    public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
+        return null;
+    }
+
     /**
      * Checks to see if budget is duplicate
      *
