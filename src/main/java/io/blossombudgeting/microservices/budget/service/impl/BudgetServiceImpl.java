@@ -182,8 +182,8 @@ public class BudgetServiceImpl implements IBudgetService {
     @Override
     public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
         long start = System.currentTimeMillis();
-        BudgetEntity currentBudget = getBudgetEntityById(requestModel.getCurrentBudgetId());
-        BudgetEntity newBudget = getBudgetEntityById(requestModel.getNewBudgetId());
+        BudgetEntity currentBudget = getBudgetEntityByIdAndPhone(requestModel.getCurrentBudgetId(), requestModel.getPhone());
+        BudgetEntity newBudget = getBudgetEntityByIdAndPhone(requestModel.getNewBudgetId(), requestModel.getPhone());
         TransactionEntity transactionEntity = transactionsRepository
                 .findByTransactionIdAndPhoneAndFlaggedForDeletionFalse(requestModel.getTransactionId(), requestModel.getPhone())
                 .orElseThrow(() -> new GenericNotFoundException("There were no transactions with the given ID"));
@@ -213,13 +213,27 @@ public class BudgetServiceImpl implements IBudgetService {
     /**
      * Grabs the entity of the given budget id
      *
-     * @param budgetId  Id of the budget
-     * @return          Budget Entity
+     * @param budgetId Id of the budget
+     * @return Budget Entity
      */
-    private BudgetEntity getBudgetEntityById(String budgetId){
-       return budgetRepo
+    private BudgetEntity getBudgetEntityById(String budgetId) {
+        return budgetRepo
                 .findById(budgetId)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
+    }
+
+
+    /**
+     * Grabs the entity of the given budget id with the phone
+     *
+     * @param budgetId Id of the budget
+     * @param phone    phone of the user
+     * @return Budget Entity
+     */
+    private BudgetEntity getBudgetEntityByIdAndPhone(String budgetId, String phone) {
+        return budgetRepo
+                .findById(budgetId)
+                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] and Phone [" + phone + "] not found"));
     }
 
     /**
@@ -228,7 +242,7 @@ public class BudgetServiceImpl implements IBudgetService {
      * @param phone users phone
      * @return list of budgets
      */
-    private List<BudgetEntity> getBudgetsByPhone(String phone){
+    private List<BudgetEntity> getBudgetsByPhone(String phone) {
         List<BudgetEntity> budgetBases = budgetRepo.findAllByPhone(phone);
         if (budgetBases.isEmpty()) {
             throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
