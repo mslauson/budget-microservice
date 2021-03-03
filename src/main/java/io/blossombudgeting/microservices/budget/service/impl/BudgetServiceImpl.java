@@ -181,11 +181,13 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
+        long start = System.currentTimeMillis();
         BudgetEntity currentBudget = getBudgetEntityById(requestModel.getCurrentBudgetId());
         BudgetEntity newBudget = getBudgetEntityById(requestModel.getNewBudgetId());
         TransactionEntity transactionEntity = transactionsRepository.findById(requestModel.getTransactionId())
                 .orElseThrow(() -> new GenericNotFoundException("There were no transactions with the given ID"));
         updateBudgetAndTransaction(currentBudget, newBudget, transactionEntity);
+        log.info("changeBudgetForTransaction execution time -> {}ms", System.currentTimeMillis() - start);
         return new GenericSuccessResponseModel(true);
     }
 
