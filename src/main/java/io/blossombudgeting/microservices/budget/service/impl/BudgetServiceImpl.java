@@ -7,11 +7,13 @@ package io.blossombudgeting.microservices.budget.service.impl;
 
 import io.blossombudgeting.microservices.budget.domain.entity.CustomerCategoriesEntity;
 import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
+import io.blossombudgeting.microservices.budget.domain.entity.TransactionEntity;
 import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
 import io.blossombudgeting.microservices.budget.repository.CustomerCategoriesRepository;
 import io.blossombudgeting.microservices.budget.repository.DefaultCategoriesRepository;
+import io.blossombudgeting.microservices.budget.repository.ITransactionsRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
@@ -38,6 +40,7 @@ public class BudgetServiceImpl implements IBudgetService {
     private final BudgetRepository budgetRepo;
     private final DefaultCategoriesRepository defaultCategoriesRepository;
     private final CustomerCategoriesRepository customerCategoriesRepository;
+    private final ITransactionsRepository transactionsRepository;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -180,6 +183,9 @@ public class BudgetServiceImpl implements IBudgetService {
     public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
         BudgetEntity currentBudget = getBudgetEntityById(requestModel.getCurrentBudgetId());
         BudgetEntity newBudget = getBudgetEntityById(requestModel.getNewBudgetId());
+        TransactionEntity transactionEntity = transactionsRepository.findById(requestModel.getTransactionId())
+                .orElseThrow(() -> new GenericNotFoundException("There were no transactions with the given ID"));
+
         return null;
     }
 
