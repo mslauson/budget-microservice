@@ -185,8 +185,8 @@ public class BudgetServiceImpl implements IBudgetService {
         BudgetEntity newBudget = getBudgetEntityById(requestModel.getNewBudgetId());
         TransactionEntity transactionEntity = transactionsRepository.findById(requestModel.getTransactionId())
                 .orElseThrow(() -> new GenericNotFoundException("There were no transactions with the given ID"));
-
-        return null;
+        updateBudgetAndTransaction(currentBudget, newBudget, transactionEntity);
+        return new GenericSuccessResponseModel(true);
     }
 
     /**
@@ -309,6 +309,31 @@ public class BudgetServiceImpl implements IBudgetService {
     private void initializeCustomerBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
         List<BudgetEntity> budgetEntities = budgetMapper.createDefaultBudgets(customerCategoriesEntity, phone);
         budgetRepo.saveAll(budgetEntities);
+    }
+
+    /**
+     * Updates budget of a transaction and also recalculates totals
+     *
+     * @param currentBudget budget transaction is currently in
+     * @param newBudget     new budget to add the transaction to
+     * @param transaction   transaction entity that we are moving
+     */
+    private void updateBudgetAndTransaction(BudgetEntity currentBudget, BudgetEntity newBudget, TransactionEntity transaction) {
+        LinkedTransactions currentLinked = currentBudget.getLinkedTransactions()
+                .stream()
+                .filter(linkedTransaction -> linkedTransaction.getTransactionId().equalsIgnoreCase(transaction.getTransactionId()))
+                .collect(Collectors.toList()).get(0);
+        currentBudget.getLinkedTransactions().remove(currentLinked);
+
+        currentBudget.setUsed(currentBudget.getUsed() - transaction.getAmount());
+
+        newBudget.getLinkedTransactions().add(currentLinked);
+        newBudget.setUsed(newBudget.getUsed() + transaction.getAmount());
+
+        transaction.setBudgetId(newBudget.getId());
+
+        budgetRepo.saveAll(List.of(currentBudget, newBudget));
+        transactionsRepository.save(transaction);
     }
 
 }
