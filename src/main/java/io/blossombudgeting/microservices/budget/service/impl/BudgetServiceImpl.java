@@ -178,6 +178,8 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
+        BudgetEntity currentBudget = getBudgetEntityById(requestModel.getCurrentBudgetId());
+        BudgetEntity newBudget = getBudgetEntityById(requestModel.getNewBudgetId());
         return null;
     }
 
