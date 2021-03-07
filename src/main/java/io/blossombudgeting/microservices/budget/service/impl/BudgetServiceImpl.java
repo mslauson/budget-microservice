@@ -1,19 +1,25 @@
 /*
- * Copyright (c) 2020. Blossom Budgeting LLC
+ * Copyright (c) 2021. Blossom Budgeting LLC
  * All Rights Reserved
  */
 
 package io.blossombudgeting.microservices.budget.service.impl;
 
+import io.blossombudgeting.microservices.budget.domain.entity.CustomerCategoriesEntity;
+import io.blossombudgeting.microservices.budget.domain.entity.DefaultCategoriesEntity;
+import io.blossombudgeting.microservices.budget.domain.entity.TransactionEntity;
 import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.microservices.budget.error.BudgetNotFoundException;
 import io.blossombudgeting.microservices.budget.repository.BudgetRepository;
+import io.blossombudgeting.microservices.budget.repository.CustomerCategoriesRepository;
+import io.blossombudgeting.microservices.budget.repository.DefaultCategoriesRepository;
+import io.blossombudgeting.microservices.budget.repository.ITransactionsRepository;
 import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
-import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
+import io.blossombudgeting.util.budgetcommonutil.exception.GenericNotFoundException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +37,9 @@ import java.util.stream.Collectors;
 public class BudgetServiceImpl implements IBudgetService {
 
     private final BudgetRepository budgetRepo;
+    private final DefaultCategoriesRepository defaultCategoriesRepository;
+    private final CustomerCategoriesRepository customerCategoriesRepository;
+    private final ITransactionsRepository transactionsRepository;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -123,6 +132,65 @@ public class BudgetServiceImpl implements IBudgetService {
         return new GenericSuccessResponseModel(true);
     }
 
+    @Override
+    public CategoriesModel refreshCategories(CategoriesModel requestModel) {
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = budgetMapper.categoriesRequestToEntity(requestModel);
+        categoriesEntity = defaultCategoriesRepository.save(categoriesEntity);
+        CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
+        log.info("refreshCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public CategoriesModel retrieveCategories(String id) {
+        log.info("Querying with id -> {}", id);
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = defaultCategoriesRepository.findById(id)
+                .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
+        CategoriesModel response = budgetMapper.defaultCategoriesEntityToResponse(categoriesEntity);
+        log.info("retrieveCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public CategoriesModel initializeCustomerCategories(String phone, String id) {
+        log.info("initializing for user -> {}", phone);
+        long start = System.currentTimeMillis();
+        DefaultCategoriesEntity categoriesEntity = defaultCategoriesRepository.findById(id)
+                .orElseThrow(() -> new GenericNotFoundException("No default categories exist for id " + id));
+        CustomerCategoriesEntity customerCategoriesEntity = budgetMapper.defaultToCustomer(categoriesEntity, phone);
+        customerCategoriesEntity = customerCategoriesRepository.save(customerCategoriesEntity);
+        initializeCustomerBudgets(customerCategoriesEntity, phone);
+        CategoriesModel response = budgetMapper.customerCategoriesEntityToResponse(customerCategoriesEntity);
+        log.info("initializeCustomerCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public CategoriesModel retrieveCustomerCategories(String phone) {
+        log.info("initializing for user -> {}", phone);
+        long start = System.currentTimeMillis();
+        CustomerCategoriesEntity customerCategoriesEntity = customerCategoriesRepository.findByPhone(phone)
+                .orElseThrow(() -> new GenericNotFoundException("No customer categories exist for user " + phone));
+        CategoriesModel response = budgetMapper.customerCategoriesEntityToResponse(customerCategoriesEntity);
+        log.info("retrieveCustomerCategories execution time -> {}ms", System.currentTimeMillis() - start);
+        return response;
+    }
+
+    @Override
+    public GenericSuccessResponseModel changeBudgetForTransaction(ChangeBudgetRequestModel requestModel) {
+        long start = System.currentTimeMillis();
+        BudgetEntity currentBudget = getBudgetEntityByIdAndPhone(requestModel.getCurrentBudgetId(), requestModel.getPhone());
+        BudgetEntity newBudget = getBudgetEntityByIdAndPhone(requestModel.getNewBudgetId(), requestModel.getPhone());
+        TransactionEntity transactionEntity = transactionsRepository
+                .findByTransactionIdAndPhoneAndFlaggedForDeletionFalse(requestModel.getTransactionId(), requestModel.getPhone())
+                .orElseThrow(() -> new GenericNotFoundException("Transaction with ID [" + requestModel.getTransactionId() + "] and Phone [" + requestModel.getPhone() + "] not found"));
+        updateBudgetAndTransaction(currentBudget, newBudget, transactionEntity);
+        log.info("changeBudgetForTransaction execution time -> {}ms", System.currentTimeMillis() - start);
+        return new GenericSuccessResponseModel(true);
+    }
+
     /**
      * Checks to see if budget is duplicate
      *
@@ -144,13 +212,27 @@ public class BudgetServiceImpl implements IBudgetService {
     /**
      * Grabs the entity of the given budget id
      *
-     * @param budgetId  Id of the budget
-     * @return          Budget Entity
+     * @param budgetId Id of the budget
+     * @return Budget Entity
      */
-    private BudgetEntity getBudgetEntityById(String budgetId){
-       return budgetRepo
+    private BudgetEntity getBudgetEntityById(String budgetId) {
+        return budgetRepo
                 .findById(budgetId)
                 .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] not found"));
+    }
+
+
+    /**
+     * Grabs the entity of the given budget id with the phone
+     *
+     * @param budgetId Id of the budget
+     * @param phone    phone of the user
+     * @return Budget Entity
+     */
+    private BudgetEntity getBudgetEntityByIdAndPhone(String budgetId, String phone) {
+        return budgetRepo
+                .findById(budgetId)
+                .orElseThrow(() -> new BudgetNotFoundException("Budget with ID [" + budgetId + "] and Phone [" + phone + "] not found"));
     }
 
     /**
@@ -159,7 +241,7 @@ public class BudgetServiceImpl implements IBudgetService {
      * @param phone users phone
      * @return list of budgets
      */
-    private List<BudgetEntity> getBudgetsByPhone(String phone){
+    private List<BudgetEntity> getBudgetsByPhone(String phone) {
         List<BudgetEntity> budgetBases = budgetRepo.findAllByPhone(phone);
         if (budgetBases.isEmpty()) {
             throw new BudgetNotFoundException("No budgets were found for this user -> { " + phone + " }");
@@ -187,27 +269,6 @@ public class BudgetServiceImpl implements IBudgetService {
                     mainChanged++;
                 }
             }
-
-            int i = 0;
-            for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
-                int changed = 0;
-                for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
-                    boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
-                    if (matches) {
-                        List<LinkedTransactions> newLinked = subCat.getLinkedTransactions()
-                                .stream()
-                                .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
-                                .collect(Collectors.toList());
-                        subCat.setLinkedTransactions(newLinked);
-                        budgetEntity.getSubCategory().set(i, subCat);
-                        changed ++;
-                    }
-                }
-                i++;
-                if (changed !=0) {
-                    log.info("Removed {} transactions from budget {}", changed, subCat.getId());
-                }
-            }
             if (mainChanged != 0 ) {
                 log.info("Removed {} transactions from budget {}", mainChanged, budgetEntity.getId());
             }
@@ -225,19 +286,38 @@ public class BudgetServiceImpl implements IBudgetService {
             for (LinkedTransactions linkedTransactions : budgetEntity.getLinkedTransactions()) {
                 newUsed = newUsed + linkedTransactions.getAmount();
             }
-            int i = 0;
-            for (SubCategoryDocument subCategoryDocument : budgetEntity.getSubCategory()) {
-                double subUsed = 0d;
-                for (LinkedTransactions linkedTransaction : subCategoryDocument.getLinkedTransactions()){
-                    subUsed = subUsed + linkedTransaction.getAmount();
-                    newUsed = newUsed + linkedTransaction.getAmount();
-                }
-                subCategoryDocument.setUsed(subUsed);
-                budgetEntity.getSubCategory().set(i, subCategoryDocument);
-                i++;
-            }
             budgetEntity.setUsed(newUsed);
         });
+    }
+
+    private void initializeCustomerBudgets(CustomerCategoriesEntity customerCategoriesEntity, String phone) {
+        List<BudgetEntity> budgetEntities = budgetMapper.createDefaultBudgets(customerCategoriesEntity, phone);
+        budgetRepo.saveAll(budgetEntities);
+    }
+
+    /**
+     * Updates budget of a transaction and also recalculates totals
+     *
+     * @param currentBudget budget transaction is currently in
+     * @param newBudget     new budget to add the transaction to
+     * @param transaction   transaction entity that we are moving
+     */
+    private void updateBudgetAndTransaction(BudgetEntity currentBudget, BudgetEntity newBudget, TransactionEntity transaction) {
+        LinkedTransactions currentLinked = currentBudget.getLinkedTransactions()
+                .stream()
+                .filter(linkedTransaction -> linkedTransaction.getTransactionId().equalsIgnoreCase(transaction.getTransactionId()))
+                .collect(Collectors.toList()).get(0);
+        currentBudget.getLinkedTransactions().remove(currentLinked);
+
+        currentBudget.setUsed(currentBudget.getUsed() - transaction.getAmount());
+
+        newBudget.getLinkedTransactions().add(currentLinked);
+        newBudget.setUsed(newBudget.getUsed() + transaction.getAmount());
+
+        transaction.setBudgetId(newBudget.getId());
+
+        budgetRepo.saveAll(List.of(currentBudget, newBudget));
+        transactionsRepository.save(transaction);
     }
 
 }

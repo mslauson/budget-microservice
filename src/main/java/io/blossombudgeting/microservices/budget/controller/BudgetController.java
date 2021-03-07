@@ -75,6 +75,37 @@ public class BudgetController {
         return ResponseEntity.ok(budgetService.removeTransactionsWhenAccountDeleted(requestModel));
     }
 
+    @PutMapping("/categories/default")
+    public ResponseEntity<CategoriesModel> updateDefaultCategoriesV1(@Valid @RequestBody CategoriesModel requestModel) {
+        log.info("updateDefaultCategoriesV1: request=[{}]", requestModel.toString());
+        return ResponseEntity.ok(budgetService.refreshCategories(requestModel));
+    }
+
+    @GetMapping("/categories/default")
+    public ResponseEntity<CategoriesModel> getDefaultCategoriesV1(@NotBlank @RequestParam("id") String id) {
+        log.info("getDefaultCategoriesV1: id=[{}]", id);
+        return ResponseEntity.ok(budgetService.retrieveCategories(id));
+    }
+
+    @PutMapping("/categories/customer/initialize")
+    public ResponseEntity<CategoriesModel> initializeCustomerCategoriesV1(@NotBlank @RequestParam("phone") String phone,
+                                                                          @NotBlank @RequestParam("id") String id) {
+        log.info("initializeCustomerCategoriesV1: phone=[{}] id=[{}]", phone, id);
+        return ResponseEntity.ok(budgetService.initializeCustomerCategories(phone, id));
+    }
+
+    @PutMapping("/change")
+    public ResponseEntity<GenericSuccessResponseModel> changeCustomerBudgetV1(@Valid @RequestBody ChangeBudgetRequestModel requestModel) {
+        log.info("changeCustomerBudgetV1: request=[{}]", requestModel.toString());
+        return ResponseEntity.ok(budgetService.changeBudgetForTransaction(requestModel));
+    }
+
+    @GetMapping("/categories/customer")
+    public ResponseEntity<CategoriesModel> getCustomerCategoriesV1(@NotBlank @RequestParam("phone") String phone) {
+        log.info("getCustomerCategoriesV1: phone=[{}]", phone);
+        return ResponseEntity.ok(budgetService.retrieveCustomerCategories(phone));
+    }
+
     @DeleteMapping("/id")
     public ResponseEntity<GenericSuccessResponseModel> deleteBudgetByIdV1(@RequestParam String id) {
         log.info("deleteBudgetByIdV1: id=[{}]", id);

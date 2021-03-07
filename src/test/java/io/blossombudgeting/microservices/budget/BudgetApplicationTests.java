@@ -7,9 +7,7 @@ package io.blossombudgeting.microservices.budget;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetBase;
-import io.blossombudgeting.microservices.budget.domain.models.BudgetResponseModel;
-import io.blossombudgeting.microservices.budget.domain.models.RemoveTransactionsRequestModel;
+import io.blossombudgeting.microservices.budget.domain.models.*;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
 import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.util.DateUtils;
@@ -40,21 +38,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BudgetApplicationTests {
 
     private static String budgetId;
+    private static String budgetId2;
 
     @Autowired
     MockMvc mockMvc;
     private final ObjectMapper om = new ObjectMapper();
     private BudgetBase budgetBase;
+    private BudgetBase budgetBase2;
     private RemoveTransactionsRequestModel removeTransactionsRequestModel;
+    private Category category;
+    private CategoriesModel categoriesModel;
+    private ChangeBudgetRequestModel changeBudgetRequestModel;
+
+    public static String getBudgetId2() {
+        return budgetId2;
+    }
+
+    public static void setBudgetId2(String budgetId2) {
+        BudgetApplicationTests.budgetId2 = budgetId2;
+    }
+
 
     @BeforeEach
     void setUp() {
         SubCategoryDocument subCategoryDocument = new SubCategoryDocument();
         subCategoryDocument.setLinkedTransactions(List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
         budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(subCategoryDocument), 0D, 0D, false, List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
+        budgetBase2 = new BudgetBase("second", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name2", "category2", null, 0D, 0D, false, List.of(new LinkedTransactions("id3", 1d), new LinkedTransactions("id4", 2d)));
         removeTransactionsRequestModel = new RemoveTransactionsRequestModel();
         removeTransactionsRequestModel.setPhone("12345678901");
         removeTransactionsRequestModel.setTransactionIds(List.of("id"));
+        category = new Category("testing", "testing", "testing", true);
+        categoriesModel = new CategoriesModel("testing", "phone", List.of(category));
+        changeBudgetRequestModel = new ChangeBudgetRequestModel("1234567890", "id", "second", "id2");
     }
 
     @Test
@@ -68,6 +84,19 @@ public class BudgetApplicationTests {
         String string = result.getResponse().getContentAsString();
         BudgetResponseModel rm = om.readValue(string, BudgetResponseModel.class);
         setBudgetId(rm.getBudgets().get(0).getId());
+    }
+
+    @Test
+    void AaTestAddBudget() throws Exception {
+        MvcResult result = mockMvc.perform(post("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase2))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String string = result.getResponse().getContentAsString();
+        BudgetResponseModel rm = om.readValue(string, BudgetResponseModel.class);
+        setBudgetId2(rm.getBudgets().get(0).getId());
     }
 
     @Test
@@ -305,7 +334,52 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void ITestDeleteRemoveTransaction() throws Exception {
+    void testChangeBudgetNoPhone() throws Exception {
+        changeBudgetRequestModel.setPhone("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoOldBudget() throws Exception {
+        changeBudgetRequestModel.setCurrentBudgetId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param currentBudgetId is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoNewBudget() throws Exception {
+        changeBudgetRequestModel.setNewBudgetId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param newBudgetId is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoTId() throws Exception {
+        changeBudgetRequestModel.setTransactionId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param transactionId is missing."));
+    }
+
+
+    @Test
+    void JTestDeleteRemoveTransaction() throws Exception {
         mockMvc.perform(put("/budgets/api/v1/remove/transactions")
                 .content(om.writeValueAsString(removeTransactionsRequestModel))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -325,9 +399,18 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void JTestDeleteBudgetById() throws Exception {
+    void KTestDeleteBudgetById() throws Exception {
         mockMvc.perform(delete("/budgets/api/v1/id")
                 .param("id", getBudgetId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void KkTestDeleteBudgetById() throws Exception {
+        mockMvc.perform(delete("/budgets/api/v1/id")
+                .param("id", getBudgetId2())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -341,6 +424,137 @@ public class BudgetApplicationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No budget found with given Id"));
+    }
+
+    @Test
+    void LTestRefreshCategories() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategoryId() throws Exception {
+        categoriesModel.getCategories().get(0).setId("");
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].id is missing."));
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategory() throws Exception {
+        categoriesModel.getCategories().get(0).setCategory("");
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories[0].category is missing."));
+    }
+
+    @Test
+    void testRefreshCategoriesNoCategoryList() throws Exception {
+        categoriesModel.setCategories(null);
+        mockMvc.perform(put("/budgets/api/v1/categories/default")
+                .content(om.writeValueAsString(categoriesModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param categories is missing."));
+    }
+
+    @Test
+    void MTestGetCategories() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/default")
+                .param("id", "testing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetCategoriesNotFound() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/default")
+                .param("id", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No default categories exist for id fake"));
+    }
+
+    @Test
+    void NTestInitializeCustomer() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .param("id", "testing")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testInitializeCustomerNotFound() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .param("id", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No default categories exist for id fake"));
+    }
+
+    @Test
+    void testInitializeCustomerNoId() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("phone", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param id is missing."));
+    }
+
+    @Test
+    void testInitializeCustomerNoPhone() throws Exception {
+        mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
+                .param("id", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
+    }
+
+
+    @Test
+    void OTestGetCustomerCategories() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .param("phone", "test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetCustomerCategoriesNotFound() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .param("phone", "fake")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No customer categories exist for user fake"));
+    }
+
+    @Test
+    void testGetCustomerCategoriesNoPhone() throws Exception {
+        mockMvc.perform(get("/budgets/api/v1/categories/customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
     }
 
     @Test
