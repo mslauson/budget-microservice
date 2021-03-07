@@ -334,14 +334,47 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void ITestChangeBudget() throws Exception {
-        changeBudgetRequestModel.setCurrentBudgetId(getBudgetId());
-        changeBudgetRequestModel.setNewBudgetId(getBudgetId2());
+    void testChangeBudgetNoPhone() throws Exception {
+        changeBudgetRequestModel.setPhone("");
         mockMvc.perform(put("/budgets/api/v1/change")
                 .content(om.writeValueAsString(changeBudgetRequestModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param phone is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoOldBudget() throws Exception {
+        changeBudgetRequestModel.setCurrentBudgetId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param currentBudgetId is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoNewBudget() throws Exception {
+        changeBudgetRequestModel.setNewBudgetId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param newBudgetId is missing."));
+    }
+
+    @Test
+    void testChangeBudgetNoTId() throws Exception {
+        changeBudgetRequestModel.setTransactionId("");
+        mockMvc.perform(put("/budgets/api/v1/change")
+                .content(om.writeValueAsString(changeBudgetRequestModel))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required param transactionId is missing."));
     }
 
 
