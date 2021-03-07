@@ -308,7 +308,18 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void ITestDeleteRemoveTransaction() throws Exception {
+    void ITestChangeBudget() throws Exception {
+        budgetBase.setId(getBudgetId());
+        mockMvc.perform(put("/budgets/api/v1")
+                .content(om.writeValueAsString(budgetBase))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void JTestDeleteRemoveTransaction() throws Exception {
         mockMvc.perform(put("/budgets/api/v1/remove/transactions")
                 .content(om.writeValueAsString(removeTransactionsRequestModel))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -328,7 +339,7 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void JTestDeleteBudgetById() throws Exception {
+    void KTestDeleteBudgetById() throws Exception {
         mockMvc.perform(delete("/budgets/api/v1/id")
                 .param("id", getBudgetId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -347,7 +358,7 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void KTestRefreshCategories() throws Exception {
+    void LTestRefreshCategories() throws Exception {
         mockMvc.perform(put("/budgets/api/v1/categories/default")
                 .content(om.writeValueAsString(categoriesModel))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -389,7 +400,7 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void LTestGetCategories() throws Exception {
+    void MTestGetCategories() throws Exception {
         mockMvc.perform(get("/budgets/api/v1/categories/default")
                 .param("id", "testing")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -408,7 +419,7 @@ public class BudgetApplicationTests {
     }
 
     @Test
-    void MTestInitializeCustomer() throws Exception {
+    void NTestInitializeCustomer() throws Exception {
         mockMvc.perform(put("/budgets/api/v1/categories/customer/initialize")
                 .param("phone", "test")
                 .param("id", "testing")
@@ -450,7 +461,7 @@ public class BudgetApplicationTests {
 
 
     @Test
-    void NTestGetCustomerCategories() throws Exception {
+    void OTestGetCustomerCategories() throws Exception {
         mockMvc.perform(get("/budgets/api/v1/categories/customer")
                 .param("phone", "test")
                 .contentType(MediaType.APPLICATION_JSON)
