@@ -64,7 +64,7 @@ public class BudgetApplicationTests {
         SubCategoryDocument subCategoryDocument = new SubCategoryDocument();
         subCategoryDocument.setLinkedTransactions(List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
         budgetBase = new BudgetBase("id", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(subCategoryDocument), 0D, 0D, false, List.of(new LinkedTransactions("id", 1d), new LinkedTransactions("id2", 2d)));
-        budgetBase2 = new BudgetBase("second", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name", "category", Collections.singletonList(subCategoryDocument), 0D, 0D, false, List.of(new LinkedTransactions("id3", 1d), new LinkedTransactions("id4", 2d)));
+        budgetBase2 = new BudgetBase("second", "12345678901", LocalDateTime.of(2020, Month.APRIL, 30, 18, 1, 4), String.valueOf(DateUtils.getFirstOfMonth()), "name2", "category2", null, 0D, 0D, false, List.of(new LinkedTransactions("id3", 1d), new LinkedTransactions("id4", 2d)));
         removeTransactionsRequestModel = new RemoveTransactionsRequestModel();
         removeTransactionsRequestModel.setPhone("12345678901");
         removeTransactionsRequestModel.setTransactionIds(List.of("id"));
@@ -89,7 +89,7 @@ public class BudgetApplicationTests {
     @Test
     void AaTestAddBudget() throws Exception {
         MvcResult result = mockMvc.perform(post("/budgets/api/v1")
-                .content(om.writeValueAsString(budgetBase))
+                .content(om.writeValueAsString(budgetBase2))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -335,9 +335,10 @@ public class BudgetApplicationTests {
 
     @Test
     void ITestChangeBudget() throws Exception {
-        budgetBase.setId(getBudgetId());
+        changeBudgetRequestModel.setCurrentBudgetId(getBudgetId());
+        changeBudgetRequestModel.setNewBudgetId(getBudgetId2());
         mockMvc.perform(put("/budgets/api/v1/change")
-                .content(om.writeValueAsString(budgetBase))
+                .content(om.writeValueAsString(changeBudgetRequestModel))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -368,6 +369,15 @@ public class BudgetApplicationTests {
     void KTestDeleteBudgetById() throws Exception {
         mockMvc.perform(delete("/budgets/api/v1/id")
                 .param("id", getBudgetId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void KkTestDeleteBudgetById() throws Exception {
+        mockMvc.perform(delete("/budgets/api/v1/id")
+                .param("id", getBudgetId2())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

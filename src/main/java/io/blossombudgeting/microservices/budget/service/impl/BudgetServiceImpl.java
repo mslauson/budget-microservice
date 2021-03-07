@@ -18,7 +18,6 @@ import io.blossombudgeting.microservices.budget.service.intf.IBudgetService;
 import io.blossombudgeting.microservices.budget.util.BudgetMapper;
 import io.blossombudgeting.util.budgetcommonutil.entity.BudgetEntity;
 import io.blossombudgeting.util.budgetcommonutil.entity.LinkedTransactions;
-import io.blossombudgeting.util.budgetcommonutil.entity.SubCategoryDocument;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericBadRequestException;
 import io.blossombudgeting.util.budgetcommonutil.exception.GenericNotFoundException;
 import io.blossombudgeting.util.budgetcommonutil.model.GenericSuccessResponseModel;
@@ -270,27 +269,6 @@ public class BudgetServiceImpl implements IBudgetService {
                     mainChanged++;
                 }
             }
-
-            int i = 0;
-            for (SubCategoryDocument subCat : budgetEntity.getSubCategory()) {
-                int changed = 0;
-                for (LinkedTransactions transaction : subCat.getLinkedTransactions()) {
-                    boolean matches = transactionIds.stream().anyMatch(id -> id.equalsIgnoreCase(transaction.getTransactionId()));
-                    if (matches) {
-                        List<LinkedTransactions> newLinked = subCat.getLinkedTransactions()
-                                .stream()
-                                .filter(linkedTransactions -> !transaction.getTransactionId().equalsIgnoreCase(linkedTransactions.getTransactionId()))
-                                .collect(Collectors.toList());
-                        subCat.setLinkedTransactions(newLinked);
-                        budgetEntity.getSubCategory().set(i, subCat);
-                        changed ++;
-                    }
-                }
-                i++;
-                if (changed !=0) {
-                    log.info("Removed {} transactions from budget {}", changed, subCat.getId());
-                }
-            }
             if (mainChanged != 0 ) {
                 log.info("Removed {} transactions from budget {}", mainChanged, budgetEntity.getId());
             }
@@ -307,17 +285,6 @@ public class BudgetServiceImpl implements IBudgetService {
             double newUsed = 0d;
             for (LinkedTransactions linkedTransactions : budgetEntity.getLinkedTransactions()) {
                 newUsed = newUsed + linkedTransactions.getAmount();
-            }
-            int i = 0;
-            for (SubCategoryDocument subCategoryDocument : budgetEntity.getSubCategory()) {
-                double subUsed = 0d;
-                for (LinkedTransactions linkedTransaction : subCategoryDocument.getLinkedTransactions()){
-                    subUsed = subUsed + linkedTransaction.getAmount();
-                    newUsed = newUsed + linkedTransaction.getAmount();
-                }
-                subCategoryDocument.setUsed(subUsed);
-                budgetEntity.getSubCategory().set(i, subCategoryDocument);
-                i++;
             }
             budgetEntity.setUsed(newUsed);
         });
