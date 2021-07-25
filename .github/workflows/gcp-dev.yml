@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       # Setup gcloud CLI
-      - uses: google-github-actions/deploy-cloudrun@main
+      - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GKE_PROJECT }}
           service_account_email: ${{ secrets.GKE_EMAIL }}
