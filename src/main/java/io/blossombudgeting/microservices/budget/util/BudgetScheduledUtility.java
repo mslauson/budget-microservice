@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021. Blossom Budgeting LLC
+ * All Rights Reserved
+ */
+
 package io.blossombudgeting.microservices.budget.util;
 
 
@@ -45,6 +50,7 @@ public class BudgetScheduledUtility {
             nextMonthEntities.add(
             BudgetEntity
                     .builder()
+                    .phone(budgetEntity.getPhone())
                     .id(encryptionUtility.encrypt(StringUtils.buildStringBuffer(decryptedCat, newMonthYear, budgetEntity.getPhone())))
                     .name(category)
                     .category(category)
